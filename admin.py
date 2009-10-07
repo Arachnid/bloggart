@@ -8,6 +8,7 @@ from google.appengine.ext.db import djangoforms
 
 import os
 import re
+import unicodedata
 
 import fix_path
 import config
@@ -15,6 +16,7 @@ import static
 
 
 def slugify(s):
+  s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
   return re.sub('[^a-zA-Z0-9-]+', '-', s).strip('-')
 
 
@@ -36,6 +38,8 @@ def render_template(template_name, template_vals=None, theme=None):
 
 
 class BlogPost(db.Model):
+  MIME_TYPE = "text/html; charset=utf-8"
+
   # The URL path to the blog post. Posts have a path iff they are published.
   path = db.StringProperty()
   title = db.StringProperty(required=True, indexed=False)
@@ -57,12 +61,12 @@ class BlogPost(db.Model):
       content = None
       while not content:
         path = format_post_path(self, num)
-        content = static.add(path, rendered, "text/html")
+        content = static.add(path, rendered, self.MIME_TYPE)
         num += 1
       self.path = path
       self.put()
     else:
-      static.set(self.path, rendered, "text/html")
+      static.set(self.path, rendered, self.MIME_TYPE)
 
 
 class PostForm(djangoforms.ModelForm):
