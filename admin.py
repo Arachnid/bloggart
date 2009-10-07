@@ -71,6 +71,18 @@ class PostForm(djangoforms.ModelForm):
     exclude = [ 'path', 'published', 'updated' ]
 
 
+def with_post(fun):
+  def decorate(self, post_id=None):
+    post = None
+    if post_id:
+      post = BlogPost.get_by_id(int(post_id))
+      if not post:
+        self.error(404)
+        return
+    fun(self, post)
+  return decorate
+
+
 class PostHandler(webapp.RequestHandler):
   def render_to_response(self, template_name, template_vals=None, theme=None):
     template_name = os.path.join("admin", template_name)
@@ -80,11 +92,13 @@ class PostHandler(webapp.RequestHandler):
   def render_form(self, form):
     self.render_to_response("edit.html", {'form': form})
 
-  def get(self):
-    self.render_form(PostForm())
+  @with_post
+  def get(self, post):
+    self.render_form(PostForm(instance=post))
 
-  def post(self):
-    form = PostForm(data=self.request.POST)
+  @with_post
+  def post(self, post):
+    form = PostForm(data=self.request.POST, instance=post)
     if form.is_valid():
       post = form.save(commit=False)
       post.publish()
@@ -95,6 +109,7 @@ class PostHandler(webapp.RequestHandler):
 
 application = webapp.WSGIApplication([
   ('/admin/newpost', PostHandler),
+  ('/admin/post/(\d+)', PostHandler),
 ])
 
 
