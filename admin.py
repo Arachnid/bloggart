@@ -83,12 +83,30 @@ def with_post(fun):
   return decorate
 
 
-class PostHandler(webapp.RequestHandler):
+class BaseHandler(webapp.RequestHandler):
   def render_to_response(self, template_name, template_vals=None, theme=None):
     template_name = os.path.join("admin", template_name)
     self.response.out.write(render_template(template_name, template_vals,
                                             theme))
 
+
+class AdminHandler(BaseHandler):
+  def get(self):
+    offset = int(self.request.get('start', 0))
+    count = int(self.request.get('count', 20))
+    posts = BlogPost.all().order('-published').fetch(count, offset)
+    template_vals = {
+        'offset': offset,
+        'count': count,
+        'last_post': offset + len(posts) - 1,
+        'prev_offset': max(0, offset - count),
+        'next_offset': offset + count,
+        'posts': posts,
+    }
+    self.render_to_response("index.html", template_vals)
+
+
+class PostHandler(BaseHandler):
   def render_form(self, form):
     self.render_to_response("edit.html", {'form': form})
 
@@ -108,6 +126,7 @@ class PostHandler(webapp.RequestHandler):
 
 
 application = webapp.WSGIApplication([
+  ('/admin/', AdminHandler),
   ('/admin/newpost', PostHandler),
   ('/admin/post/(\d+)', PostHandler),
 ])

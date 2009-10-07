@@ -1,0 +1,22 @@
+{% extends "../base.html" %}
+{% block title %}All Posts{% endblock %}
+{% block body %}
+  <p>Posts {{offset}} to {{last_post}}</p>
+  <table>
+    <thead>
+      <tr><th>Title</th><th>Published</th></tr>
+    </thead>
+    {% for post in posts %}
+      <tr>
+        <td><a href="post/{{post.key.id}}">{{post.title|escape}}</a></td>
+        <td>{{post.published|date:"Y-m-d"}}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  {% ifnotequal offset 0 %}
+    <a href="?start={{prev_offset}}&count={{count}}">&lt;- Previous</a>
+  {% endifnotequal %}
+  {% if posts|length_is:count %}
+    <a href="?start={{next_offset}}&count={{count}}">Next -></a>
+  {% endif %}
+{% endblock %}
