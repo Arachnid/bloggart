@@ -54,7 +54,21 @@ def set(path, body, content_type, **kwargs):
   content.put()
   return content
 
+def add(path, body, content_type, **kwargs):
+  """Adds a new StaticContent and returns it.
+  
+  Args:
+    As per set().
+  Returns:
+    A StaticContent object, or None if one already exists at the given path.
+  """
+  def _tx():
+    if StaticContent.get_by_key_name(path):
+      return None
+    return set(path, body, content_type, **kwargs)
+  return db.run_in_transaction(_tx)
 
+  
 class StaticContentHandler(webapp.RequestHandler):
   def output_content(self, content, serve=True):
     self.response.headers['Content-Type'] = content.content_type
