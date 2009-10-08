@@ -1,9 +1,50 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <title>{% block title %}Bloggart{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="/static/default/css/screen.css" />
   {% block head %}{% endblock %}
 </head>
 <body>
-  {% block body %}{% endblock %}
+	<div id="header-wrap"><div id="header" class="container_16">						
+		<h1 id="logo-text"><a href="index.html" title="">{{config.blog_name}}</a></h1>		
+		<p id="intro">{{config.slogan}}</p>
+		<div  id="nav">
+			<ul>
+				<li id="current"><a href="/">Home</a></li>
+			</ul>		
+		</div>		
+		<div id="header-image"></div> 		
+	</div></div>
+	<div id="content-outer"><div id="content-wrapper" class="container_16">
+		<div id="main" class="grid_12">
+      {% block body %}{% endblock %}
+		</div>
+		<div id="left-columns" class="grid_4">
+      {% for sidebar in config.sidebars %}
+        <div class="sidemenu">
+          <h3>{{sidebar.0}}</h3>
+          <ul>
+            {% for entry in sidebar.1 %}
+              <li><a href="{{entry.1}}">{{entry.0}}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+		</div>		
+	</div></div>
+	<div id="footer-wrapper" class="container_16">
+		<div id="footer-bottom">
+			<p class="bottom-left">			
+			&nbsp; &copy; {{config.author_name}} &nbsp; &nbsp;
+			Design by : <a href="http://www.styleshout.com/">styleshout</a>												
+			</p>	
+			<p class="bottom-right" >
+				<a href="/">Home</a> |
+				<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a> | 
+		   	<a href="http://validator.w3.org/check/referer">XHTML</a>
+			</p>
+		</div>	
+	</div>
 </body>
 </html>

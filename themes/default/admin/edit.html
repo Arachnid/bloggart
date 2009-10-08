@@ -1,6 +1,7 @@
 {% extends "../base.html" %}
-{% block title %}New Post{% endblock %}
+{% block title %}{% if form.instance %}Edit{% else %}New{% endif %} Post{% endblock %}
 {% block body %}
+  <h2>{% if form.instance %}Edit{% else %}New{% endif %} Post</h2>
   <form method="post" action="">
     <table>
       {{form}}

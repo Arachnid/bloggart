@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{post.title}} - {{config.blog_name}}{% endblock %}
 {% block body %}
+  <h2>{{post.title}}</h2>
   {{post.body}}
 {% endblock %}

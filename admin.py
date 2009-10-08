@@ -89,6 +89,9 @@ def with_post(fun):
 
 class BaseHandler(webapp.RequestHandler):
   def render_to_response(self, template_name, template_vals=None, theme=None):
+    template_vals.update({
+        'config': config,
+    })
     template_name = os.path.join("admin", template_name)
     self.response.out.write(render_template(template_name, template_vals,
                                             theme))
