@@ -14,7 +14,7 @@ handlers:
 
 - url: /static/([^/]+)/(.*)
   static_files: themes/\1/static/\2
-  upload: static/.*
+  upload: themes/[^/]+/static/.*
 
 - url: /.*
   script: static.py
