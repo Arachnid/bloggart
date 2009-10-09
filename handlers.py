@@ -2,7 +2,6 @@ import os
 
 from google.appengine.ext import webapp
 
-import config
 import models
 import utils
 
@@ -13,7 +12,7 @@ from google.appengine.ext.db import djangoforms
 class PostForm(djangoforms.ModelForm):
   class Meta:
     model = models.BlogPost
-    exclude = [ 'path', 'published', 'updated' ]
+    exclude = [ 'path', 'published', 'updated', 'deps' ]
 
 
 def with_post(fun):
@@ -30,9 +29,6 @@ def with_post(fun):
 
 class BaseHandler(webapp.RequestHandler):
   def render_to_response(self, template_name, template_vals=None, theme=None):
-    template_vals.update({
-        'config': config,
-    })
     template_name = os.path.join("admin", template_name)
     self.response.out.write(utils.render_template(template_name, template_vals,
                                                   theme))

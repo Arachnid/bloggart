@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{config.blog_name}}{% endblock %}
+{% block body %}
+  {% for post in posts %}
+    <h2><a href="{{post.path}}">{{post.title}}</a></h2>
+    {{post.summary|linebreaks}}
+    <p class="postmeta">
+      <a href="{{post.path}}" class="readmore">Read more</a> |
+      <span class="date">{{post.published|date:"d F, Y"}}</span>
+    </p>
+  {% endfor %}
+{% endblock %}

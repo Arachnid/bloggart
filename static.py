@@ -18,7 +18,7 @@ class StaticContent(db.Model):
   
   The serving path for content is provided in the key name.
   """
-  body = db.BlobProperty(required=True)
+  body = db.BlobProperty()
   content_type = db.StringProperty(required=True)
   last_modified = db.DateTimeProperty(required=True, auto_now=True)
   etag = aetycoon.DerivedProperty(lambda x: hashlib.sha1(x.body).hexdigest())

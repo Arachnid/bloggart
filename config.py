@@ -30,3 +30,9 @@ sidebars = [
     ('Schneier on Security', 'http://www.schneier.com/blog/'),
   ]),
 ]
+
+# Number of entries per page in indexes.
+posts_per_page = 10
+
+# The mime type to serve HTML files as.
+html_mime_type = "text/html; charset=utf-8"
