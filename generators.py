@@ -82,7 +82,7 @@ class IndexContentGenerator(ContentGenerator):
 
   @classmethod
   def get_etag(cls, post):
-    return hashlib.sha1(post.title + post.summary).hexdigest()
+    return hashlib.sha1((post.title + post.summary).encode('utf-8')).hexdigest()
 
   @classmethod
   def generate_resource(cls, post, resource):
