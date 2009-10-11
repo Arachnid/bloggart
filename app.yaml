@@ -8,6 +8,10 @@ handlers:
   script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
   login: admin
 
+- url: /_ah/queue/deferred
+  script: $PYTHON_LIB/google/appengine/ext/deferred/__init__.py
+  login: admin
+
 - url: /admin/.*
   script: admin.py
   login: admin

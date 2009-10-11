@@ -1,5 +1,7 @@
 import hashlib
+import os
 from google.appengine.ext import db
+from google.appengine.ext import deferred
 
 import fix_path
 import config
@@ -12,6 +14,9 @@ generator_list = []
 
 class ContentGenerator(object):
   """A class that generates content and dependency lists for blog posts."""
+
+  can_defer = True
+  """If True, this ContentGenerator's resources can be generated later."""
 
   @classmethod
   def name(cls):
@@ -54,9 +59,11 @@ class ContentGenerator(object):
 class PostContentGenerator(ContentGenerator):
   """ContentGenerator for the actual blog post itself."""
   
+  can_defer = False
+  
   @classmethod
   def get_resource_list(cls, post):
-    return [post.path]
+    return [post.key().id()]
 
   @classmethod
   def get_etag(cls, post):
@@ -64,7 +71,11 @@ class PostContentGenerator(ContentGenerator):
 
   @classmethod
   def generate_resource(cls, post, resource):
-    assert resource == post.path
+    import models
+    if not post:
+      post = models.BlogPost.get_by_id(resource)
+    else:
+      assert resource == post.key().id()
     template_vals = {
         'post': post,
     }
@@ -85,14 +96,56 @@ class IndexContentGenerator(ContentGenerator):
     return hashlib.sha1((post.title + post.summary).encode('utf-8')).hexdigest()
 
   @classmethod
-  def generate_resource(cls, post, resource):
-    assert resource == "index"
+  def generate_resource(cls, post, resource, pagenum=1, start_ts=None):
     import models
     q = models.BlogPost.all().order('-published')
-    posts = q.fetch(config.posts_per_page)
+    if start_ts:
+      q.filter('published <=', start_ts)
+
+    posts = q.fetch(config.posts_per_page + 1)
+    more_posts = len(posts) > config.posts_per_page
+
+    template_vals = {
+        'posts': posts[:config.posts_per_page],
+        'prev_page': pagenum - 1,
+        'next_page': pagenum + 1 if more_posts else None,
+    }
+    rendered = utils.render_template("listing.html", template_vals)
+
+    path_args = {
+        'resource': resource,
+        'pagenum': pagenum,
+    }
+    static.set('/page/%d' % (pagenum,), rendered, config.html_mime_type)
+    if pagenum == 1:
+      static.set('/', rendered, config.html_mime_type)
+
+    if more_posts:
+      deferred.defer(cls.generate_resource, None, resource, pagenum + 1,
+                     posts[-1].published)
+generator_list.append(IndexContentGenerator)
+
+
+class AtomContentGenerator(ContentGenerator):
+  """ContentGenerator for Atom feeds."""
+  
+  @classmethod
+  def get_resource_list(cls, post):
+    return ["atom"]
+
+  @classmethod
+  def get_etag(cls, post):
+    return hashlib.sha1(db.model_to_protobuf(post).Encode()).hexdigest()
+
+  @classmethod
+  def generate_resource(cls, post, resource):
+    import models
+    q = models.BlogPost.all().order('-updated')
+    posts = q.fetch(10)
     template_vals = {
         'posts': posts,
     }
-    rendered = utils.render_template("listing.html", template_vals)
-    static.set('/', rendered, config.html_mime_type)
-generator_list.append(IndexContentGenerator)
+    rendered = utils.render_template("atom.xml", template_vals)
+    static.set('/feeds/atom.xml', rendered,
+               'application/atom+xml; charset=utf-8')
+generator_list.append(AtomContentGenerator)

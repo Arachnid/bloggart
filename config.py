@@ -7,6 +7,9 @@ author_name = 'the author'
 # (Optional) slogan
 slogan = 'This is my blog'
 
+# The hostname this site will primarially serve off (used for Atom feeds)
+host = 'localhost'
+
 # Selects the theme to use. Theme names correspond to directories under
 # the 'themes' directory, containing templates and static content.
 theme = 'default'

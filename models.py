@@ -49,7 +49,11 @@ class BlogPost(db.Model):
       else:
         # Otherwise just regenerate the changes
         to_regenerate = new_deps ^ old_deps
-      for dep in to_regenerate:
-        generator_class.generate_resource(self, dep)
+      if generator_class.can_defer:
+        for dep in to_regenerate:
+          deferred.defer(generator_class.generate_resource, None, dep)
+      else:
+        for dep in to_regenerate:
+          generator_class.generate_resource(self, dep)
       self.deps[generator_class.name()] = (new_deps, new_etag)
     self.put()
