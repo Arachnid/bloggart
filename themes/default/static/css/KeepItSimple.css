@@ -230,7 +230,7 @@ input.button {
 }
 #header #header-image {
 	position: absolute;
-	background: url(../images/header-image.gif) no-repeat;
+	background: url(../images/header-bloggart-watermark.png) no-repeat;
 	width: 371px;
 	height: 263px;	
 	right: 10px; top: 0;	
