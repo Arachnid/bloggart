@@ -1,0 +1,3 @@
+Bloggart is a blog application for Google App Engine. It's currently being developed as a demonstration app for <a href="http://blog.notdot.net/2009/10/Writing-a-blog-system-on-App-Engine">a series of blog posts</a>, but is intended to be a useful and versatile blogging system for App Engine by the time it's done.
+
+!http://github.com/Arachnid/bloggart/raw/master/themes/default/static/images/bloggart-ae.png!
