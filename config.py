@@ -1,14 +1,14 @@
 # Name of the blog
-blog_name = 'My Blog'
+blog_name = 'Bloggart demo'
 
 # Your name (used for copyright info)
 author_name = 'the author'
 
 # (Optional) slogan
-slogan = 'This is my blog'
+slogan = 'Blogging on App Engine'
 
 # The hostname this site will primarially serve off (used for Atom feeds)
-host = 'localhost'
+host = 'bloggart-demo.appspot.com'
 
 # Selects the theme to use. Theme names correspond to directories under
 # the 'themes' directory, containing templates and static content.
