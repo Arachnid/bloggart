@@ -107,8 +107,8 @@ class IndexContentGenerator(ContentGenerator):
 
     template_vals = {
         'posts': posts[:config.posts_per_page],
-        'prev_page': pagenum - 1,
-        'next_page': pagenum + 1 if more_posts else None,
+        'prev_page': "/page/%d" % (pagenum - 1,) if pagenum > 1 else None,
+        'next_page': "/page/%d" % (pagenum + 1,) if more_posts else None,
     }
     rendered = utils.render_template("listing.html", template_vals)
 

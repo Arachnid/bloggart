@@ -9,4 +9,10 @@
       <span class="date">{{post.published|date:"d F, Y"}}</span>
     </p>
   {% endfor %}
+  {% if prev_page %}
+    <a id="prev" href="{{prev_page}}">Newer</a>
+  {% endif %}
+  {% if next_page %}
+    <a id="next" href="{{next_page}}">Older</a>
+  {% endif %}
 {% endblock %}
