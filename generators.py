@@ -84,16 +84,26 @@ class PostContentGenerator(ContentGenerator):
 generator_list.append(PostContentGenerator)
 
 
-class IndexContentGenerator(ContentGenerator):
-  """ContentGenerator for the homepage of the blog and archive pages."""
+class ListingContentGenerator(ContentGenerator):
+  path = None
+  """The path for listing pages."""
 
-  @classmethod
-  def get_resource_list(cls, post):
-    return ["index"]
+  first_page_path = None
+  """The path for the first listing page."""
 
   @classmethod
   def get_etag(cls, post):
     return hashlib.sha1((post.title + post.summary).encode('utf-8')).hexdigest()
+
+  @classmethod
+  def _filter_query(cls, resource, q):
+    """Applies filters to the BlogPost query.
+    
+    Args:
+      resource: The resource being generated.
+      q: The query to act on.
+    """
+    pass
 
   @classmethod
   def generate_resource(cls, post, resource, pagenum=1, start_ts=None):
@@ -101,29 +111,62 @@ class IndexContentGenerator(ContentGenerator):
     q = models.BlogPost.all().order('-published')
     if start_ts:
       q.filter('published <=', start_ts)
+    cls._filter_query(resource, q)
 
     posts = q.fetch(config.posts_per_page + 1)
     more_posts = len(posts) > config.posts_per_page
 
+    path_args = {
+        'resource': resource,
+    }
+    path_args['pagenum'] = pagenum - 1
+    prev_page = cls.path % path_args
+    path_args['pagenum'] = pagenum + 1
+    next_page = cls.path % path_args
     template_vals = {
         'posts': posts[:config.posts_per_page],
-        'prev_page': "/page/%d" % (pagenum - 1,) if pagenum > 1 else None,
-        'next_page': "/page/%d" % (pagenum + 1,) if more_posts else None,
+        'prev_page': prev_page if pagenum > 1 else None,
+        'next_page': next_page if more_posts else None,
     }
     rendered = utils.render_template("listing.html", template_vals)
 
-    path_args = {
-        'resource': resource,
-        'pagenum': pagenum,
-    }
-    static.set('/page/%d' % (pagenum,), rendered, config.html_mime_type)
+    path_args['pagenum'] = pagenum
+    static.set(cls.path % path_args, rendered, config.html_mime_type)
     if pagenum == 1:
-      static.set('/', rendered, config.html_mime_type)
+      static.set(cls.first_page_path % path_args, rendered,
+                 config.html_mime_type)
 
     if more_posts:
       deferred.defer(cls.generate_resource, None, resource, pagenum + 1,
                      posts[-1].published)
+
+
+class IndexContentGenerator(ListingContentGenerator):
+  """ContentGenerator for the homepage of the blog and archive pages."""
+
+  path = '/page/%(pagenum)d'
+  first_page_path = '/'
+
+  @classmethod
+  def get_resource_list(cls, post):
+    return ["index"]
 generator_list.append(IndexContentGenerator)
+
+
+class TagsContentGenerator(ListingContentGenerator):
+  """ContentGenerator for the tags pages."""
+
+  path = '/tag/%(resource)s/%(pagenum)d'
+  first_page_path = '/tag/%(resource)s'
+
+  @classmethod
+  def get_resource_list(cls, post):
+    return post.tags
+
+  @classmethod
+  def _filter_query(cls, resource, q):
+    q.filter('tags =', resource)
+generator_list.append(TagsContentGenerator)
 
 
 class AtomContentGenerator(ContentGenerator):

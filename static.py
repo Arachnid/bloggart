@@ -74,7 +74,7 @@ class StaticContentHandler(webapp.RequestHandler):
     self.response.headers['Content-Type'] = content.content_type
     last_modified = content.last_modified.strftime(HTTP_DATE_FMT)
     self.response.headers['Last-Modified'] = last_modified
-    self.response.headers['ETag'] = content.etag
+    self.response.headers['ETag'] = '"%s"' % (content.etag,)
     if serve:
       self.response.out.write(content.body)
     else:

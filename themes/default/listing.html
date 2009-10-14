@@ -3,6 +3,15 @@
 {% block body %}
   {% for post in posts %}
     <h2><a href="{{post.path}}">{{post.title}}</a></h2>
+    <p class="post-info">
+      Posted by {{config.author_name}}
+      {% if post.tags %}
+        | Filed under
+        {% for tag in post.tags %}
+          <a href="/tag/{{tag|escape}}">{{tag|escape}}</a>{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      {% endif %}
+    </p>
     {{post.summary|linebreaks}}
     <p class="postmeta">
       <a href="{{post.path}}" class="readmore">Read more</a> |

@@ -14,6 +14,7 @@ class BlogPost(db.Model):
   path = db.StringProperty()
   title = db.StringProperty(required=True, indexed=False)
   body = db.TextProperty(required=True)
+  tags = db.StringListProperty()
   published = db.DateTimeProperty(auto_now_add=True)
   updated = db.DateTimeProperty(auto_now=True)
   deps = aetycoon.PickleProperty()
