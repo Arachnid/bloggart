@@ -2,5 +2,18 @@
 {% block title %}{{post.title}} - {{config.blog_name}}{% endblock %}
 {% block body %}
   <h2>{{post.title}}</h2>
+    <p class="post-info">
+      Posted by {{config.author_name}}
+      {% if post.tags %}
+        | Filed under
+        {% for tag in post.tags %}
+          <a href="/tag/{{tag|escape}}">{{tag|escape}}</a>{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      {% endif %}
+    </p>
+  <p class="postmeta">
+    <a href="{{post.path}}" class="readmore">Read more</a> |
+    <span class="date">{{post.published|date:"d F, Y"}}</span>
+  </p>
   {{post.body|linebreaks}}
 {% endblock %}
