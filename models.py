@@ -58,3 +58,13 @@ class BlogPost(db.Model):
           generator_class.generate_resource(self, dep)
       self.deps[generator_class.name()] = (new_deps, new_etag)
     self.put()
+
+
+class VersionInfo(db.Model):
+  bloggart_major = db.IntegerProperty(required=True)
+  bloggart_minor = db.IntegerProperty(required=True)
+  bloggart_rev = db.IntegerProperty(required=True)
+
+  @property
+  def bloggart_version(self):
+    return (self.bloggart_major, self.bloggart_minor, self.bloggart_rev)
