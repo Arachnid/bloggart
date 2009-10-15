@@ -39,3 +39,6 @@ posts_per_page = 10
 
 # The mime type to serve HTML files as.
 html_mime_type = "text/html; charset=utf-8"
+
+# Use disqus for comments?
+use_disqus = True

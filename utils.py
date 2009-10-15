@@ -28,6 +28,7 @@ def format_post_path(post, num):
 def render_template(template_name, template_vals=None, theme=None):
   template_vals.update({
       'config': config,
+      'devel': os.environ['SERVER_SOFTWARE'].startswith('Devel'),
   })
   template_path = os.path.join("themes", theme or config.theme, template_name)
   return template.render(template_path, template_vals or {})
