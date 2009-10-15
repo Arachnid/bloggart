@@ -2,7 +2,7 @@
 {% block title %}{{config.blog_name}}{% endblock %}
 {% block body %}
   {% for post in posts %}
-    <h2><a href="{{post.path}}">{{post.title}}</a></h2>
+    <h2><a href="{{post.path}}">{{post.title|escape}}</a></h2>
     <p class="post-info">
       Posted by {{config.author_name}}
       {% if post.tags %}

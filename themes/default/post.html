@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block title %}{{post.title}} - {{config.blog_name}}{% endblock %}
+{% block title %}{{post.title|escape}} - {{config.blog_name}}{% endblock %}
 {% block body %}
-  <h2>{{post.title}}</h2>
+  <h2>{{post.title|escape}}</h2>
     <p class="post-info">
       Posted by {{config.author_name}}
       {% if post.tags %}
@@ -11,11 +11,10 @@
         {% endfor %}
       {% endif %}
     </p>
+  {{post.body|linebreaks}}
   <p class="postmeta">
-    <a href="{{post.path}}" class="readmore">Read more</a> |
     <span class="date">{{post.published|date:"d F, Y"}}</span>
   </p>
-  {{post.body|linebreaks}}
   
   <h3 id="comments">Comments</h3>
   <div id="disqus_thread"></div>
