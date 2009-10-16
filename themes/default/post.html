@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block title %}{{post.title}} - {{config.blog_name}}{% endblock %}
+{% block title %}{{post.title|escape}} - {{config.blog_name}}{% endblock %}
 {% block body %}
-  <h2>{{post.title}}</h2>
+  <h2>{{post.title|escape}}</h2>
     <p class="post-info">
       Posted by {{config.author_name}}
       {% if post.tags %}
@@ -11,9 +11,21 @@
         {% endfor %}
       {% endif %}
     </p>
+  {{post.body|linebreaks}}
   <p class="postmeta">
-    <a href="{{post.path}}" class="readmore">Read more</a> |
     <span class="date">{{post.published|date:"d F, Y"}}</span>
   </p>
-  {{post.body|linebreaks}}
+  
+  <h3 id="comments">Comments</h3>
+  <div id="disqus_thread"></div>
+  {% if use_disqus %}
+    {% if devel %}
+      <script type="text/javascript">
+        disqus_developer = 1;
+      </script>
+    {% endif %}
+    <script type="text/javascript" src="http://disqus.com/forums/bloggart-demo/embed.js"></script>
+    <noscript><a href="http://disqus.com/forums/bloggart-demo/?url=ref">View the discussion thread.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+  {% endif %}
 {% endblock %}

@@ -2,7 +2,7 @@
 {% block title %}{{config.blog_name}}{% endblock %}
 {% block body %}
   {% for post in posts %}
-    <h2><a href="{{post.path}}">{{post.title}}</a></h2>
+    <h2><a href="{{post.path}}">{{post.title|escape}}</a></h2>
     <p class="post-info">
       Posted by {{config.author_name}}
       {% if post.tags %}
@@ -15,6 +15,9 @@
     {{post.summary|linebreaks}}
     <p class="postmeta">
       <a href="{{post.path}}" class="readmore">Read more</a> |
+      {% if use_disqus %}
+        <a href="{{post.path}}#disqus_thread" class="readmore">Comments</a> |
+      {% endif %}
       <span class="date">{{post.published|date:"d F, Y"}}</span>
     </p>
   {% endfor %}
@@ -23,5 +26,21 @@
   {% endif %}
   {% if next_page %}
     <a id="next" href="{{next_page}}">Older</a>
+  {% endif %}
+  {% if use_disqus %}
+    <script type="text/javascript">
+    //<![CDATA[
+    (function() {
+      var links = document.getElementsByTagName('a');
+      var query = '?';
+      for(var i = 0; i < links.length; i++) {
+      if(links[i].href.indexOf('#disqus_thread') >= 0) {
+        query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+      }
+      }
+      document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/bloggart-demo/get_num_replies.js' + query + '"></' + 'script>');
+    })();
+    //]]>
+    </script>
   {% endif %}
 {% endblock %}
