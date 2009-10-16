@@ -16,9 +16,9 @@
     <span class="date">{{post.published|date:"d F, Y"}}</span>
   </p>
   
-  <h3 id="comments">Comments</h3>
-  <div id="disqus_thread"></div>
-  {% if use_disqus %}
+  {% if config.use_disqus %}
+    <h3 id="comments">Comments</h3>
+    <div id="disqus_thread"></div>
     {% if devel %}
       <script type="text/javascript">
         disqus_developer = 1;
