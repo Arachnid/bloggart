@@ -1,5 +1,6 @@
 import aetycoon
 import re
+from django.utils import text
 from google.appengine.ext import db
 from google.appengine.ext import deferred
 
@@ -26,7 +27,7 @@ class BlogPost(db.Model):
     if match:
       return self.body[:match.start(0)]
     else:
-      return self.body
+      return text.truncate_html_words(self.body, config.summary_length)
 
   def publish(self):
     if not self.path:
