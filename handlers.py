@@ -29,6 +29,11 @@ def with_post(fun):
 
 class BaseHandler(webapp.RequestHandler):
   def render_to_response(self, template_name, template_vals=None, theme=None):
+    if not template_vals:
+      template_vals = {}
+    template_vals.update({
+        'handler_class': self.__class__.__name__,
+    })
     template_name = os.path.join("admin", template_name)
     self.response.out.write(utils.render_template(template_name, template_vals,
                                                   theme))

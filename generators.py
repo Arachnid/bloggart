@@ -124,6 +124,7 @@ class ListingContentGenerator(ContentGenerator):
     path_args['pagenum'] = pagenum + 1
     next_page = cls.path % path_args
     template_vals = {
+        'generator_class': cls.__name__,
         'posts': posts[:config.posts_per_page],
         'prev_page': prev_page if pagenum > 1 else None,
         'next_page': next_page if more_posts else None,
