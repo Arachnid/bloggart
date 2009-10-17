@@ -161,11 +161,11 @@ class TagsContentGenerator(ListingContentGenerator):
 
   @classmethod
   def get_resource_list(cls, post):
-    return post.tags
+    return post.normalized_tags
 
   @classmethod
   def _filter_query(cls, resource, q):
-    q.filter('tags =', resource)
+    q.filter('normalized_tags =', resource)
 generator_list.append(TagsContentGenerator)
 
 

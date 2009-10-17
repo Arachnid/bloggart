@@ -15,10 +15,14 @@ class BlogPost(db.Model):
   path = db.StringProperty()
   title = db.StringProperty(required=True, indexed=False)
   body = db.TextProperty(required=True)
-  tags = db.StringListProperty()
+  tags = aetycoon.SetProperty(basestring, indexed=False)
   published = db.DateTimeProperty(auto_now_add=True)
   updated = db.DateTimeProperty(auto_now=True)
   deps = aetycoon.PickleProperty()
+
+  @aetycoon.TransformProperty(tags)
+  def normalized_tags(tags):
+    return list(set(utils.slugify(x.lower()) for x in tags))
 
   @property
   def summary(self):

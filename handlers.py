@@ -12,7 +12,7 @@ from google.appengine.ext.db import djangoforms
 class PostForm(djangoforms.ModelForm):
   class Meta:
     model = models.BlogPost
-    exclude = [ 'path', 'published', 'updated', 'deps' ]
+    exclude = [ 'path', 'published', 'updated', 'deps', 'normalized_tags' ]
 
 
 def with_post(fun):
