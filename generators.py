@@ -1,4 +1,3 @@
-import hashlib
 import os
 from google.appengine.ext import db
 from google.appengine.ext import deferred
@@ -67,7 +66,7 @@ class PostContentGenerator(ContentGenerator):
 
   @classmethod
   def get_etag(cls, post):
-    return hashlib.sha1(db.model_to_protobuf(post).Encode()).hexdigest()
+    return post.hash
 
   @classmethod
   def generate_resource(cls, post, resource):
@@ -93,7 +92,7 @@ class ListingContentGenerator(ContentGenerator):
 
   @classmethod
   def get_etag(cls, post):
-    return hashlib.sha1((post.title + post.summary).encode('utf-8')).hexdigest()
+    return post.summary_hash
 
   @classmethod
   def _filter_query(cls, resource, q):
@@ -179,7 +178,7 @@ class AtomContentGenerator(ContentGenerator):
 
   @classmethod
   def get_etag(cls, post):
-    return hashlib.sha1(db.model_to_protobuf(post).Encode()).hexdigest()
+    return post.hash
 
   @classmethod
   def generate_resource(cls, post, resource):

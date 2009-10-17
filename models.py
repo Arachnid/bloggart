@@ -1,4 +1,5 @@
 import aetycoon
+import hashlib
 import re
 from django.utils import text
 from google.appengine.ext import db
@@ -33,6 +34,16 @@ class BlogPost(db.Model):
     else:
       return text.truncate_html_words(self.body, config.summary_length)
 
+  @property
+  def hash(self):
+    val = (self.title, self.body, self.tags, self.published)
+    return hashlib.sha1(str(val)).hexdigest()
+
+  @property
+  def summary_hash(self):
+    val = (self.title, self.summary, self.tags, self.published)
+    return hashlib.sha1(str(val)).hexdigest()
+  
   def publish(self):
     if not self.path:
       num = 0
