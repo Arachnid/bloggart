@@ -53,27 +53,33 @@ class BlogPost(db.Model):
         content = static.add(path, '', config.html_mime_type)
         num += 1
       self.path = path
+      self.put()
     if not self.deps:
       self.deps = {}
+    for generator_class, deps in self.get_deps():
+      for dep in deps:
+        self.regenerate_dep(generator_class, dep)
     self.put()
+  
+  def get_deps(self, regenerate=False):
     for generator_class in generators.generator_list:
       new_deps = set(generator_class.get_resource_list(self))
       new_etag = generator_class.get_etag(self)
       old_deps, old_etag = self.deps.get(generator_class.name(), (set(), None))
-      if new_etag != old_etag:
+      if new_etag != old_etag or regenerate:
         # If the etag has changed, regenerate everything
         to_regenerate = new_deps | old_deps
       else:
         # Otherwise just regenerate the changes
         to_regenerate = new_deps ^ old_deps
-      if generator_class.can_defer:
-        for dep in to_regenerate:
-          deferred.defer(generator_class.generate_resource, None, dep)
-      else:
-        for dep in to_regenerate:
-          generator_class.generate_resource(self, dep)
       self.deps[generator_class.name()] = (new_deps, new_etag)
-    self.put()
+      yield generator_class, to_regenerate
+
+  def regenerate_dep(self, generator_class, dep):
+    if generator_class.can_defer:
+      deferred.defer(generator_class.generate_resource, None, dep)
+    else:
+      generator_class.generate_resource(self, dep)
 
 
 class VersionInfo(db.Model):
