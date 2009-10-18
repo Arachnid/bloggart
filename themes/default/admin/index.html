@@ -20,4 +20,9 @@
   {% if posts|length_is:count %}
     <a href="?start={{next_offset}}&count={{count}}">Next -></a>
   {% endif %}
+  
+  <h2>Admin Actions</h2>
+  <form method="post" action="regenerate">
+    <input type="submit" value="Regenerate all posts" />
+  </form>
 {% endblock %}

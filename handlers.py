@@ -1,8 +1,11 @@
+import logging
 import os
 
+from google.appengine.ext import deferred
 from google.appengine.ext import webapp
 
 import models
+import post_deploy
 import utils
 
 from django import newforms as forms
@@ -72,3 +75,31 @@ class PostHandler(BaseHandler):
       self.render_to_response("published.html", {'post': post})
     else:
       self.render_form(form)
+
+
+class PostRegenerator(object):
+  def __init__(self):
+    self.seen = set()
+
+  def regenerate(self, batch_size=50, start_key=None):
+    q = models.BlogPost.all()
+    if start_key:
+      q.filter('__key__ >', start_key)
+    posts = q.fetch(batch_size)
+    for post in posts:
+      for generator_class, deps in post.get_deps(True):
+        for dep in deps:
+          if (generator_class.__name__, dep) not in self.seen:
+            logging.warn((generator_class.__name__, dep))
+            self.seen.add((generator_class.__name__, dep))
+            deferred.defer(generator_class.generate_resource, None, dep)
+    if len(posts) == batch_size:
+      deferred.defer(self.regenerate, batch_size, posts[-1].key())
+
+
+class RegenerateHandler(BaseHandler):
+  def post(self):
+    regen = PostRegenerator()
+    deferred.defer(regen.regenerate)
+    deferred.defer(post_deploy.post_deploy, post_deploy.BLOGGART_VERSION)
+    self.render_to_response("regenerating.html")

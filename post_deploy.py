@@ -41,17 +41,15 @@ def try_post_deploy():
   version_info = models.VersionInfo.get_by_key_name(
       os.environ['CURRENT_VERSION_ID'])
   if not version_info:
-    post_deploy()
+    q = models.VersionInfo.all()
+    q.order('-bloggart_major')
+    q.order('-bloggart_minor')
+    q.order('-bloggart_rev')
+    post_deploy(q.get())
 
 
-def post_deploy():
+def post_deploy(previous_version):
   """Carries out post-deploy functions, such as rendering static pages."""
-  q = models.VersionInfo.all()
-  q.order('-bloggart_major')
-  q.order('-bloggart_minor')
-  q.order('-bloggart_rev')
-  previous_version = q.get()
-
   for task in post_deploy_tasks:
     task(previous_version)
 

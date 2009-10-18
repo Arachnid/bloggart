@@ -58,7 +58,10 @@ class BlogPost(db.Model):
       self.deps = {}
     for generator_class, deps in self.get_deps():
       for dep in deps:
-        self.regenerate_dep(generator_class, dep)
+        if generator_class.can_defer:
+          deferred.defer(generator_class.generate_resource, None, dep)
+        else:
+          generator_class.generate_resource(self, dep)
     self.put()
   
   def get_deps(self, regenerate=False):
@@ -74,12 +77,6 @@ class BlogPost(db.Model):
         to_regenerate = new_deps ^ old_deps
       self.deps[generator_class.name()] = (new_deps, new_etag)
       yield generator_class, to_regenerate
-
-  def regenerate_dep(self, generator_class, dep):
-    if generator_class.can_defer:
-      deferred.defer(generator_class.generate_resource, None, dep)
-    else:
-      generator_class.generate_resource(self, dep)
 
 
 class VersionInfo(db.Model):
