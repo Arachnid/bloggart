@@ -1,5 +1,5 @@
-application: bloggart-demo
-version: live
+application: notdot-blog
+version: bloggart
 runtime: python
 api_version: 1
 

@@ -1,14 +1,14 @@
 # Name of the blog
-blog_name = 'My Blog'
+blog_name = "Nick's Blog"
 
 # Your name (used for copyright info)
-author_name = 'the author'
+author_name = 'Nick Johnson'
 
 # (Optional) slogan
-slogan = 'This is my blog'
+slogan = 'because repeating myself suck'
 
 # The hostname this site will primarially serve off (used for Atom feeds)
-host = 'localhost'
+host = 'blog.notdot.net'
 
 # Selects the theme to use. Theme names correspond to directories under
 # the 'themes' directory, containing templates and static content.
