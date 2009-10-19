@@ -93,6 +93,7 @@ class PostRegenerator(object):
             logging.warn((generator_class.__name__, dep))
             self.seen.add((generator_class.__name__, dep))
             deferred.defer(generator_class.generate_resource, None, dep)
+      post.put()
     if len(posts) == batch_size:
       deferred.defer(self.regenerate, batch_size, posts[-1].key())
 
