@@ -1,0 +1,5 @@
+{% extends "../base.html" %}
+{% block menu %}
+  <li{% ifequal handler_class "AdminHandler" %} id="current"{% endifequal %}><a href="/admin/">Posts</a></li>
+  <li{% ifequal handler_class "PostHandler" %} id="current"{% endifequal %}><a href="/admin/newpost">New Post</a></li>
+{% endblock %}

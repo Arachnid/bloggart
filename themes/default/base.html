@@ -12,8 +12,9 @@
 		<p id="intro">{{config.slogan}}</p>
 		<div  id="nav">
 			<ul>
-				<li id="current"><a href="/">Home</a></li>
-			</ul>		
+				<li{% ifequal generator_class "IndexContentGenerator" %} id="current"{% endifequal %}><a href="/">Home</a></li>
+        {% block menu %}{% endblock %}
+			</ul>
 		</div>		
 		<div id="header-image"></div> 
     <form id="quick-search" action="/search" method="get">

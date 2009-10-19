@@ -1,4 +1,3 @@
-import hashlib
 import os
 from google.appengine.ext import db
 from google.appengine.ext import deferred
@@ -67,7 +66,7 @@ class PostContentGenerator(ContentGenerator):
 
   @classmethod
   def get_etag(cls, post):
-    return hashlib.sha1(db.model_to_protobuf(post).Encode()).hexdigest()
+    return post.hash
 
   @classmethod
   def generate_resource(cls, post, resource):
@@ -93,7 +92,7 @@ class ListingContentGenerator(ContentGenerator):
 
   @classmethod
   def get_etag(cls, post):
-    return hashlib.sha1((post.title + post.summary).encode('utf-8')).hexdigest()
+    return post.summary_hash
 
   @classmethod
   def _filter_query(cls, resource, q):
@@ -124,6 +123,7 @@ class ListingContentGenerator(ContentGenerator):
     path_args['pagenum'] = pagenum + 1
     next_page = cls.path % path_args
     template_vals = {
+        'generator_class': cls.__name__,
         'posts': posts[:config.posts_per_page],
         'prev_page': prev_page if pagenum > 1 else None,
         'next_page': next_page if more_posts else None,
@@ -161,11 +161,11 @@ class TagsContentGenerator(ListingContentGenerator):
 
   @classmethod
   def get_resource_list(cls, post):
-    return post.tags
+    return post.normalized_tags
 
   @classmethod
   def _filter_query(cls, resource, q):
-    q.filter('tags =', resource)
+    q.filter('normalized_tags =', resource)
 generator_list.append(TagsContentGenerator)
 
 
@@ -178,7 +178,7 @@ class AtomContentGenerator(ContentGenerator):
 
   @classmethod
   def get_etag(cls, post):
-    return hashlib.sha1(db.model_to_protobuf(post).Encode()).hexdigest()
+    return post.hash
 
   @classmethod
   def generate_resource(cls, post, resource):

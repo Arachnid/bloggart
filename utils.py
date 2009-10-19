@@ -29,6 +29,7 @@ def render_template(template_name, template_vals=None, theme=None):
   if not template_vals:
     template_vals = {}
   template_vals.update({
+      'template_name': template_name,
       'config': config,
       'devel': os.environ['SERVER_SOFTWARE'].startswith('Devel'),
   })

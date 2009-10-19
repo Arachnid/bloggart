@@ -6,7 +6,7 @@
       Posted by {{config.author_name}}
       {% if post.tags %}
         | Filed under
-        {% for tag in post.tags %}
+        {% for tag in post.normalized_tags %}
           <a href="/tag/{{tag|escape}}">{{tag|escape}}</a>{% if not forloop.last %},{% endif %}
         {% endfor %}
       {% endif %}

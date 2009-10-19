@@ -2,7 +2,7 @@ indexes:
 
 - kind: BlogPost
   properties:
-  - name: tags
+  - name: normalized_tags
   - name: published
     direction: desc
 

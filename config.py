@@ -42,3 +42,6 @@ html_mime_type = "text/html; charset=utf-8"
 
 # Use disqus for comments?
 use_disqus = True
+
+# Length (in words) of summaries, by default
+summary_length = 200
