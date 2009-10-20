@@ -46,3 +46,6 @@ disqus_forum = 'notdot-blog'
 
 # Length (in words) of summaries, by default
 summary_length = 200
+
+# If you want to use Google Analytics, enter your 'web property id' here
+analytics_id = None
