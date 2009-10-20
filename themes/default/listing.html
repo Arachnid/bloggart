@@ -12,7 +12,7 @@
         {% endfor %}
       {% endif %}
     </p>
-    {{post.summary|linebreaks}}
+    {{post.summary}}
     <p class="postmeta">
       <a href="{{post.path}}" class="readmore">Read more</a> |
       {% if config.disqus_forum %}
