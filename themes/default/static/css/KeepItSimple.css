@@ -82,7 +82,7 @@ code {
   	display: block;
   	overflow: auto;  
   	font: 500 1em/1.5em 'Lucida Console', 'Courier New', Monospace ;
-  	/* white-space: pre; */
+  	white-space: pre;
   	border: 1px solid #F0F0F0;
 	background: #f8f8f8;  
 }
