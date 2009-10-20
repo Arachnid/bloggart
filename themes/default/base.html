@@ -4,9 +4,11 @@
   <title>{% block title %}Bloggart{% endblock %}</title>
   <link rel="stylesheet" type="text/css" media="screen" href="/static/{{config.theme}}/css/screen.css" />
   <link rel="alternate" type="application/atom+xml" href="/feeds/atom.xml" />
+  <link href="/static/{{config.theme}}/css/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="/static/{{config.theme}}/prettify.js"></script>
   {% block head %}{% endblock %}
 </head>
-<body>
+<body onload="prettyPrint()">
 	<div id="header-wrap"><div id="header" class="container_16">						
 		<h1 id="logo-text"><a href="/" title="">{{config.blog_name}}</a></h1>		
 		<p id="intro">{{config.slogan}}</p>
