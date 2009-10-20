@@ -41,6 +41,7 @@ class BaseHandler(webapp.RequestHandler):
     if not template_vals:
       template_vals = {}
     template_vals.update({
+        'path': self.request.path,
         'handler_class': self.__class__.__name__,
     })
     template_name = os.path.join("admin", template_name)
