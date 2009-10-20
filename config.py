@@ -5,7 +5,7 @@ blog_name = "Nick's Blog"
 author_name = 'Nick Johnson'
 
 # (Optional) slogan
-slogan = 'because repeating myself suck'
+slogan = 'because repeating myself sucks'
 
 # The hostname this site will primarially serve off (used for Atom feeds)
 host = 'blog.notdot.net'
@@ -48,4 +48,4 @@ disqus_forum = 'notdot-blog'
 summary_length = 200
 
 # If you want to use Google Analytics, enter your 'web property id' here
-analytics_id = None
+analytics_id = 'UA-84449-3'
