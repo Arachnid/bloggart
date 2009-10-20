@@ -27,7 +27,7 @@ class BlogPost(db.Model):
 
   @property
   def tag_pairs(self):
-    return zip(self.tags, self.normalized_tags)
+    return [(x, utils.slugify(x.lower())) for x in self.tags]
 
   @property
   def summary(self):
