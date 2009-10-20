@@ -13,6 +13,12 @@ from google.appengine.ext.db import djangoforms
 
 
 class PostForm(djangoforms.ModelForm):
+  title = forms.CharField(widget=forms.TextInput(attrs={'id':'name'}))
+  body = forms.CharField(widget=forms.Textarea(attrs={
+      'id':'message',
+      'rows': 10,
+      'cols': 20}))
+  tags = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'cols': 20}))
   class Meta:
     model = models.BlogPost
     exclude = [ 'path', 'published', 'updated', 'deps', 'normalized_tags' ]
@@ -35,6 +41,7 @@ class BaseHandler(webapp.RequestHandler):
     if not template_vals:
       template_vals = {}
     template_vals.update({
+        'path': self.request.path,
         'handler_class': self.__class__.__name__,
     })
     template_name = os.path.join("admin", template_name)
