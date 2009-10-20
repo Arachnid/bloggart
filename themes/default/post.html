@@ -16,7 +16,7 @@
     <span class="date">{{post.published|date:"d F, Y"}}</span>
   </p>
   
-  {% if config.use_disqus %}
+  {% if config.disqus_forum %}
     <h3 id="comments">Comments</h3>
     <div id="disqus_thread"></div>
     {% if devel %}
@@ -24,8 +24,8 @@
         disqus_developer = 1;
       </script>
     {% endif %}
-    <script type="text/javascript" src="http://disqus.com/forums/bloggart-demo/embed.js"></script>
-    <noscript><a href="http://disqus.com/forums/bloggart-demo/?url=ref">View the discussion thread.</a></noscript>
+    <script type="text/javascript" src="http://disqus.com/forums/{{config.disqus_forum}}/embed.js"></script>
+    <noscript><a href="http://disqus.com/forums/{{config.disqus_forum}}/?url=ref">View the discussion thread.</a></noscript>
     <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
   {% endif %}
 {% endblock %}

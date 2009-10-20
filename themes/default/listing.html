@@ -27,7 +27,7 @@
   {% if next_page %}
     <a id="next" href="{{next_page}}">Older</a>
   {% endif %}
-  {% if config.use_disqus %}
+  {% if config.disqus_forum %}
     <script type="text/javascript">
     //<![CDATA[
     (function() {
@@ -38,7 +38,7 @@
         query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
       }
       }
-      document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/bloggart-demo/get_num_replies.js' + query + '"></' + 'script>');
+      document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/{{config.disqus_forum}}/get_num_replies.js' + query + '"></' + 'script>');
     })();
     //]]>
     </script>
