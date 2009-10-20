@@ -15,7 +15,7 @@
     {{post.summary|linebreaks}}
     <p class="postmeta">
       <a href="{{post.path}}" class="readmore">Read more</a> |
-      {% if config.use_disqus %}
+      {% if config.disqus_forum %}
         <a href="{{post.path}}#disqus_thread" class="readmore">Comments</a> |
       {% endif %}
       <span class="date">{{post.published|date:"d F, Y"}}</span>
