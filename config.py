@@ -40,8 +40,9 @@ posts_per_page = 10
 # The mime type to serve HTML files as.
 html_mime_type = "text/html; charset=utf-8"
 
-# Use disqus for comments?
-use_disqus = True
+# To use disqus for comments, set this to the 'short name' of the disqus forum
+# created for the purpose.
+disqus_forum = 'notdot-blog'
 
 # Length (in words) of summaries, by default
 summary_length = 200
