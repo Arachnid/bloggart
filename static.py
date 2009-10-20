@@ -94,7 +94,7 @@ class StaticContentHandler(webapp.RequestHandler):
       if last_seen >= content.last_modified.replace(microsecond=0):
         serve = False
     if 'If-None-Match' in self.request.headers:
-      etags = [x.strip()
+      etags = [x.strip('" ')
                for x in self.request.headers['If-None-Match'].split(',')]
       if content.etag in etags:
         serve = False
