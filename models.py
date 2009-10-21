@@ -26,6 +26,10 @@ class BlogPost(db.Model):
     return list(set(utils.slugify(x.lower()) for x in tags))
 
   @property
+  def tag_pairs(self):
+    return [(x, utils.slugify(x.lower())) for x in self.tags]
+
+  @property
   def summary(self):
     """Returns a summary of the blog post."""
     match = re.search("<!--.*cut.*-->", self.body)

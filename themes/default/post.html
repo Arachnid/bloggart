@@ -6,12 +6,12 @@
       Posted by {{config.author_name}}
       {% if post.tags %}
         | Filed under
-        {% for tag in post.normalized_tags %}
-          <a href="/tag/{{tag|escape}}">{{tag|escape}}</a>{% if not forloop.last %},{% endif %}
+        {% for tag in post.tag_pairs %}
+          <a href="/tag/{{tag.1|escape}}">{{tag.0|escape}}</a>{% if not forloop.last %},{% endif %}
         {% endfor %}
       {% endif %}
     </p>
-  {{post.body|linebreaks}}
+  {{post.body}}
   <p class="postmeta">
     <span class="date">{{post.published|date:"d F, Y"}}</span>
   </p>

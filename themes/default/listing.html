@@ -7,15 +7,15 @@
       Posted by {{config.author_name}}
       {% if post.tags %}
         | Filed under
-        {% for tag in post.normalized_tags %}
-          <a href="/tag/{{tag|escape}}">{{tag|escape}}</a>{% if not forloop.last %},{% endif %}
+        {% for tag in post.tag_pairs %}
+          <a href="/tag/{{tag.1|escape}}">{{tag.0|escape}}</a>{% if not forloop.last %},{% endif %}
         {% endfor %}
       {% endif %}
     </p>
-    {{post.summary|linebreaks}}
+    {{post.summary}}
     <p class="postmeta">
       <a href="{{post.path}}" class="readmore">Read more</a> |
-      {% if config.use_disqus %}
+      {% if config.disqus_forum %}
         <a href="{{post.path}}#disqus_thread" class="readmore">Comments</a> |
       {% endif %}
       <span class="date">{{post.published|date:"d F, Y"}}</span>

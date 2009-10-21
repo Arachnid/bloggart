@@ -1,4 +1,6 @@
 import os
+import urllib
+from google.appengine.api import urlfetch
 from google.appengine.ext import db
 from google.appengine.ext import deferred
 
@@ -191,4 +193,16 @@ class AtomContentGenerator(ContentGenerator):
     rendered = utils.render_template("atom.xml", template_vals)
     static.set('/feeds/atom.xml', rendered,
                'application/atom+xml; charset=utf-8')
+    if config.hubbub_hub_url:
+      cls.send_hubbub_ping(config.hubbub_hub_url)
+
+  @classmethod
+  def send_hubbub_ping(cls, hub_url):
+    data = urllib.urlencode({
+        'hub.url': 'http://%s/feeds/atom.xml' % (config.host,),
+        'hub.mode': 'publish',
+    })
+    response = urlfetch.fetch(hub_url, data, urlfetch.POST)
+    if response.status_code / 100 != 2:
+      raise Exception("Hub ping failed", response.status_code, response.content)
 generator_list.append(AtomContentGenerator)

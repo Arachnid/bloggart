@@ -11,7 +11,7 @@
    HTML ELEMENTS
 ------------------------------------------------- */ 
 body {
-	font: 11px/165% 'Lucida Grande', Verdana, Helvetica, sans-serif;
+	font: 12px/165% 'Lucida Grande', Verdana, Helvetica, sans-serif;
 	color: #666666; 	
 	margin: 0; padding: 0 0 50px 0; 
 	background: #F6F5F5 url(../images/bg.gif) repeat-x; 
@@ -82,7 +82,7 @@ code {
   	display: block;
   	overflow: auto;  
   	font: 500 1em/1.5em 'Lucida Console', 'Courier New', Monospace ;
-  	/* white-space: pre; */
+  	white-space: pre;
   	border: 1px solid #F0F0F0;
 	background: #f8f8f8;  
 }
