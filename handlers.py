@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 
@@ -19,9 +20,10 @@ class PostForm(djangoforms.ModelForm):
       'rows': 10,
       'cols': 20}))
   tags = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'cols': 20}))
+  draft = forms.BooleanField(required=False)
   class Meta:
     model = models.BlogPost
-    exclude = [ 'path', 'published', 'updated', 'deps', 'normalized_tags' ]
+    fields = [ 'title', 'body', 'tags' ]
 
 
 def with_post(fun):
@@ -71,15 +73,24 @@ class PostHandler(BaseHandler):
 
   @with_post
   def get(self, post):
-    self.render_form(PostForm(instance=post))
+    self.render_form(PostForm(
+        instance=post,
+        initial={'draft': post and post.published is None}))
 
   @with_post
   def post(self, post):
-    form = PostForm(data=self.request.POST, instance=post)
+    form = PostForm(data=self.request.POST, instance=post,
+                    initial={'draft': post and post.published is None})
     if form.is_valid():
       post = form.save(commit=False)
-      post.publish()
-      self.render_to_response("published.html", {'post': post})
+      if form.clean_data['draft']:
+        post.put()
+      else:
+        post.published = post.published or datetime.datetime.now()
+        post.publish()
+      self.render_to_response("published.html", {
+          'post': post,
+          'draft': form.clean_data['draft']})
     else:
       self.render_form(form)
 
