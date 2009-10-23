@@ -58,4 +58,4 @@ hubbub_hub_url = 'http://pubsubhubbub.appspot.com/'
 # an html file' method, then set the NAME of the file below.
 # Note that you do not need to download the file provided - just enter its name
 # here.
-google_site_verification = None
+google_site_verification = 'googleaf282d669d99b844.html'
