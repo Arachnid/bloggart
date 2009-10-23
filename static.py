@@ -1,13 +1,16 @@
 import datetime
 import hashlib
 
+from google.appengine.api.labs import taskqueue
 from google.appengine.ext import db
+from google.appengine.ext import deferred
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 import fix_path
 import aetycoon
+import utils
 
 
 HTTP_DATE_FMT = "%a, %d %b %Y %H:%M:%S GMT"
@@ -22,6 +25,26 @@ class StaticContent(db.Model):
   content_type = db.StringProperty(required=True)
   last_modified = db.DateTimeProperty(required=True, auto_now=True)
   etag = aetycoon.DerivedProperty(lambda x: hashlib.sha1(x.body).hexdigest())
+  indexed = db.BooleanProperty(required=True, default=True)
+
+
+def _get_all_paths():
+  keys = []
+  cur = StaticContent.all(keys_only=True).filter('indexed', True).fetch(1000)
+  while len(cur) == 1000:
+    keys.extend(cur)
+    q = StaticContent.all(keys_only=True)
+    q.filter('indexed', True)
+    q.filter('__key__ >', cur[-1])
+    cur = q.fetch(1000)
+  keys.extend(cur)
+  return [x.name() for x in keys]
+
+
+def _regenerate_sitemap():
+  paths = _get_all_paths()
+  rendered = utils.render_template('sitemap.xml', {'paths': paths})
+  set('/sitemap.xml', rendered, 'application/xml', False)
 
 
 def get(path):
@@ -35,13 +58,14 @@ def get(path):
   return StaticContent.get_by_key_name(path)
 
 
-def set(path, body, content_type, **kwargs):
+def set(path, body, content_type, indexed=True, **kwargs):
   """Sets the StaticContent for the provided path.
   
   Args:
     path: The path to store the content against.
     body: The data to serve for that path.
     content_type: The MIME type to serve the content as.
+    indexed: Index this page in the sitemap?
     **kwargs: Additional arguments to be passed to the StaticContent constructor
   Returns:
     A StaticContent object.
@@ -50,11 +74,22 @@ def set(path, body, content_type, **kwargs):
       key_name=path,
       body=body,
       content_type=content_type,
+      indexed=indexed,
       **kwargs)
   content.put()
+  try:
+    now = datetime.datetime.now().replace(second=0, microsecond=0)
+    eta = now.replace(second=0, microsecond=0) + datetime.timedelta(seconds=65)
+    if indexed:
+      deferred.defer(
+          _regenerate_sitemap,
+          _name='sitemap-%s' % (now.strftime('%Y%m%d%H%M'),),
+          _eta=eta)
+  except (taskqueue.TaskAlreadyExistsError, taskqueue.TombstonedTaskError), e:
+    pass
   return content
 
-def add(path, body, content_type, **kwargs):
+def add(path, body, content_type, indexed=True, **kwargs):
   """Adds a new StaticContent and returns it.
   
   Args:
@@ -65,7 +100,7 @@ def add(path, body, content_type, **kwargs):
   def _tx():
     if StaticContent.get_by_key_name(path):
       return None
-    return set(path, body, content_type, **kwargs)
+    return set(path, body, content_type, indexed, **kwargs)
   return db.run_in_transaction(_tx)
 
   

@@ -192,7 +192,7 @@ class AtomContentGenerator(ContentGenerator):
     }
     rendered = utils.render_template("atom.xml", template_vals)
     static.set('/feeds/atom.xml', rendered,
-               'application/atom+xml; charset=utf-8')
+               'application/atom+xml; charset=utf-8', indexed=False)
     if config.hubbub_hub_url:
       cls.send_hubbub_ping(config.hubbub_hub_url)
 
