@@ -22,10 +22,12 @@ class StaticContent(db.Model):
   The serving path for content is provided in the key name.
   """
   body = db.BlobProperty()
-  content_type = db.StringProperty(required=True)
+  content_type = db.StringProperty()
+  status = db.IntegerProperty(required=True, default=200)
   last_modified = db.DateTimeProperty(required=True, auto_now=True)
   etag = aetycoon.DerivedProperty(lambda x: hashlib.sha1(x.body).hexdigest())
   indexed = db.BooleanProperty(required=True, default=True)
+  headers = db.StringListProperty()
 
 
 def _get_all_paths():
@@ -106,11 +108,16 @@ def add(path, body, content_type, indexed=True, **kwargs):
   
 class StaticContentHandler(webapp.RequestHandler):
   def output_content(self, content, serve=True):
-    self.response.headers['Content-Type'] = content.content_type
+    if content.content_type:
+      self.response.headers['Content-Type'] = content.content_type
     last_modified = content.last_modified.strftime(HTTP_DATE_FMT)
     self.response.headers['Last-Modified'] = last_modified
     self.response.headers['ETag'] = '"%s"' % (content.etag,)
+    for header in content.headers:
+      key, value = header.split(':', 1)
+      self.response.headers[key] = value.strip()
     if serve:
+      self.response.set_status(content.status)
       self.response.out.write(content.body)
     else:
       self.response.set_status(304)
