@@ -52,3 +52,10 @@ analytics_id = None
 
 # If you want to use PubSubHubbub, supply the hub URL to use here.
 hubbub_hub_url = 'http://pubsubhubbub.appspot.com/'
+
+# If you want to use Google Site verification, go to 
+# https://www.google.com/webmasters/tools/ , add your site, choose the 'upload
+# an html file' method, then set the NAME of the file below.
+# Note that you do not need to download the file provided - just enter its name
+# here.
+google_site_verification = None
