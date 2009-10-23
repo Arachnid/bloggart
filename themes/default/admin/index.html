@@ -13,8 +13,10 @@
           <td><a href="post/{{post.key.id}}">{{post.title|escape}}</a></td>
           <td>{% if post.published %}{{post.published|date:"Y-m-d"}}{% else %}Draft{% endif %}</td>
 	  <td>
-	    <a href="{{post.path}}">View</a>
-	    |
+	    {% if post.path %}
+	      <a href="{{post.path}}">View</a>
+	      |
+	    {% endif %}
 	    <a href="post/{{post.key.id}}">Edit</a>
 	  </td>
 	</tr>
