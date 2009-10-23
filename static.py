@@ -30,25 +30,6 @@ class StaticContent(db.Model):
   headers = db.StringListProperty()
 
 
-def _get_all_paths():
-  keys = []
-  cur = StaticContent.all(keys_only=True).filter('indexed', True).fetch(1000)
-  while len(cur) == 1000:
-    keys.extend(cur)
-    q = StaticContent.all(keys_only=True)
-    q.filter('indexed', True)
-    q.filter('__key__ >', cur[-1])
-    cur = q.fetch(1000)
-  keys.extend(cur)
-  return [x.name() for x in keys]
-
-
-def _regenerate_sitemap():
-  paths = _get_all_paths()
-  rendered = utils.render_template('sitemap.xml', {'paths': paths})
-  set('/sitemap.xml', rendered, 'application/xml', False)
-
-
 def get(path):
   """Returns the StaticContent object for the provided path.
   
@@ -84,7 +65,7 @@ def set(path, body, content_type, indexed=True, **kwargs):
     eta = now.replace(second=0, microsecond=0) + datetime.timedelta(seconds=65)
     if indexed:
       deferred.defer(
-          _regenerate_sitemap,
+          utils._regenerate_sitemap,
           _name='sitemap-%s' % (now.strftime('%Y%m%d%H%M'),),
           _eta=eta)
   except (taskqueue.TaskAlreadyExistsError, taskqueue.TombstonedTaskError), e:
