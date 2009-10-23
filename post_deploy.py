@@ -1,3 +1,4 @@
+import logging
 import os
 from google.appengine.api.labs import taskqueue
 from google.appengine.ext import deferred
@@ -8,7 +9,28 @@ import static
 import utils
 
 
-BLOGGART_VERSION = (1, 0, 0)
+BLOGGART_VERSION = (1, 0, 1)
+
+
+class PostRegenerator(object):
+  def __init__(self):
+    self.seen = set()
+
+  def regenerate(self, batch_size=50, start_key=None):
+    q = models.BlogPost.all()
+    if start_key:
+      q.filter('__key__ >', start_key)
+    posts = q.fetch(batch_size)
+    for post in posts:
+      for generator_class, deps in post.get_deps(True):
+        for dep in deps:
+          if (generator_class.__name__, dep) not in self.seen:
+            logging.warn((generator_class.__name__, dep))
+            self.seen.add((generator_class.__name__, dep))
+            deferred.defer(generator_class.generate_resource, None, dep)
+      post.put()
+    if len(posts) == batch_size:
+      deferred.defer(self.regenerate, batch_size, posts[-1].key())
 
 
 post_deploy_tasks = []
@@ -16,15 +38,24 @@ post_deploy_tasks = []
 
 def generate_static_pages(pages):
   def generate(previous_version):
-    for path, template in pages:
+    for path, template, indexed in pages:
       rendered = utils.render_template(template)
-      static.set(path, rendered, config.html_mime_type)
+      static.set(path, rendered, config.html_mime_type, indexed)
   return generate
 
 post_deploy_tasks.append(generate_static_pages([
-    ('/search', 'search.html'),
-    ('/cse.xml', 'cse.xml'),
+    ('/search', 'search.html', True),
+    ('/cse.xml', 'cse.xml', False),
+    ('/robots.txt', 'robots.txt', False),
 ]))
+
+
+def regenerate_all(previous_version):
+  if previous_version < BLOGGART_VERSION:
+    regen = PostRegenerator()
+    deferred.defer(regen.regenerate)
+
+post_deploy_tasks.append(regenerate_all)
 
 
 def run_deploy_task():
