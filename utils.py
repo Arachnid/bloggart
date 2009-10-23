@@ -53,6 +53,7 @@ def _get_all_paths():
 
 
 def _regenerate_sitemap():
+  import static
   paths = _get_all_paths()
   rendered = render_template('sitemap.xml', {'paths': paths})
-  set('/sitemap.xml', rendered, 'application/xml', False)
+  static.set('/sitemap.xml', rendered, 'application/xml', False)
