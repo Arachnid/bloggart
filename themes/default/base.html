@@ -3,6 +3,9 @@
 <head>
   <title>{% block title %}Bloggart{% endblock %}</title>
   <link rel="stylesheet" type="text/css" media="screen" href="/static/{{config.theme}}/css/screen.css" />
+  {% if config.highlighting_style %}
+  <link rel="stylesheet" type="text/css" media="screen" href="/static/default/css/pygments_{{config.highlighting_style}}.css" />
+  {% endif %}
   <link rel="alternate" type="application/atom+xml" href="/feeds/atom.xml" />
   {% block head %}{% endblock %}
 </head>

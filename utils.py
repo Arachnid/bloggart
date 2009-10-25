@@ -25,14 +25,19 @@ def format_post_path(post, num):
   }
 
 
-def render_template(template_name, template_vals=None, theme=None):
-  if not template_vals:
+def get_template_vals_defaults(template_vals=None):
+  if template_vals is None:
     template_vals = {}
   template_vals.update({
-      'template_name': template_name,
       'config': config,
       'devel': os.environ['SERVER_SOFTWARE'].startswith('Devel'),
   })
+  return template_vals
+
+
+def render_template(template_name, template_vals=None, theme=None):
+  template_vals = get_template_vals_defaults(template_vals)
+  template_vals.update({'template_name': template_name})
   template_path = os.path.join("themes", theme or config.theme, template_name)
   return template.render(template_path, template_vals)
 

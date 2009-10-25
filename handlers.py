@@ -5,6 +5,8 @@ import os
 from google.appengine.ext import deferred
 from google.appengine.ext import webapp
 
+import config
+import markup
 import models
 import post_deploy
 import utils
@@ -19,6 +21,8 @@ class PostForm(djangoforms.ModelForm):
       'id':'message',
       'rows': 10,
       'cols': 20}))
+  body_markup = forms.ChoiceField(
+    choices=[(k, v[0]) for k, v in markup.MARKUP_MAP.iteritems()])
   tags = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'cols': 20}))
   draft = forms.BooleanField(required=False)
   class Meta:
@@ -75,7 +79,10 @@ class PostHandler(BaseHandler):
   def get(self, post):
     self.render_form(PostForm(
         instance=post,
-        initial={'draft': post and post.published is None}))
+        initial={
+          'draft': post and post.published is None,
+          'body_markup': post and post.body_markup or config.default_markup,
+        }))
 
   @with_post
   def post(self, post):

@@ -6,6 +6,7 @@ from google.appengine.ext import deferred
 
 import fix_path
 import config
+import markup
 import static
 import utils
 
@@ -79,6 +80,7 @@ class PostContentGenerator(ContentGenerator):
       assert resource == post.key().id()
     template_vals = {
         'post': post,
+        'rendered_body': markup.render_body(post),
     }
     rendered = utils.render_template("post.html", template_vals)
     static.set(post.path, rendered, config.html_mime_type)

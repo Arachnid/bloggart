@@ -59,3 +59,12 @@ hubbub_hub_url = 'http://pubsubhubbub.appspot.com/'
 # Note that you do not need to download the file provided - just enter its name
 # here.
 google_site_verification = None
+
+# Default markup language for entry bodies (defaults to html).
+default_markup = 'html'
+
+# Syntax highlighting style for RestructuredText and Markdown,
+# one of 'manni', 'perldoc', 'borland', 'colorful', 'default', 'murphy',
+# 'vs', 'trac', 'tango', 'fruity', 'autumn', 'bw', 'emacs', 'pastie',
+# 'friendly', 'native'.
+highlighting_style = 'friendly'

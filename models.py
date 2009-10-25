@@ -1,20 +1,28 @@
 import aetycoon
 import hashlib
 import re
-from django.utils import text
 from google.appengine.ext import db
 from google.appengine.ext import deferred
 
 import config
 import generators
+import markup
 import static
 import utils
+
+
+if config.default_markup in markup.MARKUP_MAP:
+  DEFAULT_MARKUP = config.default_markup
+else:
+  DEFAULT_MARKUP = 'html'
 
 
 class BlogPost(db.Model):
   # The URL path to the blog post. Posts have a path iff they are published.
   path = db.StringProperty()
   title = db.StringProperty(required=True, indexed=False)
+  body_markup = db.StringProperty(choices=set(markup.MARKUP_MAP),
+                                  default=DEFAULT_MARKUP)
   body = db.TextProperty(required=True)
   tags = aetycoon.SetProperty(basestring, indexed=False)
   published = db.DateTimeProperty()
@@ -32,11 +40,7 @@ class BlogPost(db.Model):
   @property
   def summary(self):
     """Returns a summary of the blog post."""
-    match = re.search("<!--.*cut.*-->", self.body)
-    if match:
-      return self.body[:match.start(0)]
-    else:
-      return text.truncate_html_words(self.body, config.summary_length)
+    return markup.render_summary(self)
 
   @property
   def hash(self):
