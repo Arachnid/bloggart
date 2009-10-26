@@ -1,0 +1,6 @@
+This directory contains various themes for bloggart.
+
+Have a look at "simple" to for a very basic theme. This theme could
+serve as a template for you own theme.
+
+The "default" theme is a more advanced theme.

@@ -3,9 +3,22 @@ import re
 import unicodedata
 
 from google.appengine.ext import webapp
-from google.appengine.ext.webapp import template
+from google.appengine.ext.webapp.template import _swap_settings
+
+import django.conf
+from django import template
+from django.template import loader
 
 import config
+
+
+if isinstance(config.theme, (list, tuple)):
+  TEMPLATE_DIRS = config.theme
+else:
+  TEMPLATE_DIRS = [os.path.abspath('themes/default')]
+  if config.theme and config.theme != 'default':
+    TEMPLATE_DIRS.insert(0,
+                         os.path.abspath(os.path.join('themes', config.theme)))
 
 
 def slugify(s):
@@ -38,8 +51,13 @@ def get_template_vals_defaults(template_vals=None):
 def render_template(template_name, template_vals=None, theme=None):
   template_vals = get_template_vals_defaults(template_vals)
   template_vals.update({'template_name': template_name})
-  template_path = os.path.join("themes", theme or config.theme, template_name)
-  return template.render(template_path, template_vals)
+  old_settings = _swap_settings({'TEMPLATE_DIRS': TEMPLATE_DIRS})
+  try:
+    tpl = loader.get_template(template_name)
+    rendered = tpl.render(template.Context(template_vals))
+  finally:
+    _swap_settings(old_settings)
+  return rendered
 
 
 def _get_all_paths():
