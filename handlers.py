@@ -80,7 +80,7 @@ class PostHandler(BaseHandler):
     self.render_form(PostForm(
         instance=post,
         initial={
-          'draft': post and post.published is None,
+          'draft': post and not post.path,
           'body_markup': post and post.body_markup or config.default_markup,
         }))
 
@@ -91,9 +91,11 @@ class PostHandler(BaseHandler):
     if form.is_valid():
       post = form.save(commit=False)
       if form.clean_data['draft']:
+        post.published = datetime.datetime.max
         post.put()
       else:
-        post.published = post.published or datetime.datetime.now()
+        if not post.path:
+          post.published = datetime.datetime.now()
         post.publish()
       self.render_to_response("published.html", {
           'post': post,

@@ -11,7 +11,7 @@
       {% for post in posts %}
         <tr>
           <td><a href="post/{{post.key.id}}">{{post.title|escape}}</a></td>
-          <td>{% if post.published %}{{post.published|date:"Y-m-d"}}{% else %}Draft{% endif %}</td>
+          <td>{% if post.path %}{{post.published|date:"Y-m-d"}}{% else %}Draft{% endif %}</td>
 	  <td>
 	    {% if post.path %}
 	      <a href="{{post.path}}">View</a>

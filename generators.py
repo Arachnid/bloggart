@@ -1,3 +1,5 @@
+import datetime
+import itertools
 import os
 import urllib
 from google.appengine.api import urlfetch
@@ -112,8 +114,7 @@ class ListingContentGenerator(ContentGenerator):
   def generate_resource(cls, post, resource, pagenum=1, start_ts=None):
     import models
     q = models.BlogPost.all().order('-published')
-    if start_ts:
-      q.filter('published <=', start_ts)
+    q.filter('published <', start_ts or datetime.datetime.max)
     cls._filter_query(resource, q)
 
     posts = q.fetch(config.posts_per_page + 1)
@@ -142,7 +143,7 @@ class ListingContentGenerator(ContentGenerator):
 
     if more_posts:
       deferred.defer(cls.generate_resource, None, resource, pagenum + 1,
-                     posts[-1].published)
+                     posts[-2].published)
 
 
 class IndexContentGenerator(ListingContentGenerator):
@@ -188,7 +189,8 @@ class AtomContentGenerator(ContentGenerator):
   def generate_resource(cls, post, resource):
     import models
     q = models.BlogPost.all().order('-updated')
-    posts = q.fetch(10)
+    # Fetch the 10 most recently updated non-draft posts
+    posts = itertools.islice((x for x in q if x.path), 10)
     template_vals = {
         'posts': posts,
     }
