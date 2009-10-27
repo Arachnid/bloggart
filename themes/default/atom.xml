@@ -24,7 +24,7 @@
             <uri>http://{{config.host}}/</uri>
         </author>
         <content type="html">
-            {{post.body|escape}}
+            {{post.rendered|escape}}
         </content>
     </entry>
     {% endfor %}

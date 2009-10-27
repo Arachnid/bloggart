@@ -38,6 +38,11 @@ class BlogPost(db.Model):
     return [(x, utils.slugify(x.lower())) for x in self.tags]
 
   @property
+  def rendered(self):
+    """Returns the rendered body."""
+    return markup.render_body(self)
+
+  @property
   def summary(self):
     """Returns a summary of the blog post."""
     return markup.render_summary(self)
