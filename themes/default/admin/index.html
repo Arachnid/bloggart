@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "admin/base.html" %}
 {% block title %}All Posts{% endblock %}
 {% block body %}
   <h2>All Posts</h2>
@@ -11,10 +11,12 @@
       {% for post in posts %}
         <tr>
           <td><a href="post/{{post.key.id}}">{{post.title|escape}}</a></td>
-          <td>{% if post.published %}{{post.published|date:"Y-m-d"}}{% else %}Draft{% endif %}</td>
+          <td>{% if post.path %}{{post.published|date:"Y-m-d"}}{% else %}Draft{% endif %}</td>
 	  <td>
-	    <a href="{{post.path}}">View</a>
-	    |
+	    {% if post.path %}
+	      <a href="{{post.path}}">View</a>
+	      |
+	    {% endif %}
 	    <a href="post/{{post.key.id}}">Edit</a>
 	  </td>
 	</tr>

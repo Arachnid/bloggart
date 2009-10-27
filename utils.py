@@ -3,9 +3,22 @@ import re
 import unicodedata
 
 from google.appengine.ext import webapp
-from google.appengine.ext.webapp import template
+from google.appengine.ext.webapp.template import _swap_settings
+
+import django.conf
+from django import template
+from django.template import loader
 
 import config
+
+
+if isinstance(config.theme, (list, tuple)):
+  TEMPLATE_DIRS = config.theme
+else:
+  TEMPLATE_DIRS = [os.path.abspath('themes/default')]
+  if config.theme and config.theme != 'default':
+    TEMPLATE_DIRS.insert(0,
+                         os.path.abspath(os.path.join('themes', config.theme)))
 
 
 def slugify(s):
@@ -25,16 +38,26 @@ def format_post_path(post, num):
   }
 
 
-def render_template(template_name, template_vals=None, theme=None):
-  if not template_vals:
+def get_template_vals_defaults(template_vals=None):
+  if template_vals is None:
     template_vals = {}
   template_vals.update({
-      'template_name': template_name,
       'config': config,
       'devel': os.environ['SERVER_SOFTWARE'].startswith('Devel'),
   })
-  template_path = os.path.join("themes", theme or config.theme, template_name)
-  return template.render(template_path, template_vals)
+  return template_vals
+
+
+def render_template(template_name, template_vals=None, theme=None):
+  template_vals = get_template_vals_defaults(template_vals)
+  template_vals.update({'template_name': template_name})
+  old_settings = _swap_settings({'TEMPLATE_DIRS': TEMPLATE_DIRS})
+  try:
+    tpl = loader.get_template(template_name)
+    rendered = tpl.render(template.Context(template_vals))
+  finally:
+    _swap_settings(old_settings)
+  return rendered
 
 
 def _get_all_paths():
@@ -53,6 +76,7 @@ def _get_all_paths():
 
 
 def _regenerate_sitemap():
+  import static
   paths = _get_all_paths()
   rendered = render_template('sitemap.xml', {'paths': paths})
-  set('/sitemap.xml', rendered, 'application/xml', False)
+  static.set('/sitemap.xml', rendered, 'application/xml', False)
