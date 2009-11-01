@@ -268,7 +268,8 @@ class WordpressMigration(BaseMigration):
             'tags': set([])}
     post['status'] = self._get_text(node, 'status', ns=self.ns_wordpress)
     if post['status'] == 'draft':
-      post['published'] = post['path'] = None
+      post['published'] = datetime.datetime.max
+      post['path'] = None
     else:
       post['published'] = self._parse_date(self._get_text(node, 'post_date',
                                                        ns=self.ns_wordpress))
