@@ -189,7 +189,7 @@ class AtomContentGenerator(ContentGenerator):
     import models
     q = models.BlogPost.all().order('-updated')
     # Fetch the 10 most recently updated non-draft posts
-    posts = itertools.islice((x for x in q if x.path), 10)
+    posts = list(itertools.islice((x for x in q if x.path), 10))
     template_vals = {
         'posts': posts,
     }
