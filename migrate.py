@@ -163,7 +163,7 @@ class WordpressMigration(BaseMigration):
     item = node.find(tag)
     if item is not None:
       return item.text
-    return None
+    return ''
 
   @classmethod
   def _expand_wp_tags(cls, content):
@@ -273,8 +273,8 @@ class WordpressMigration(BaseMigration):
     else:
       post['published'] = self._parse_date(self._get_text(node, 'post_date',
                                                        ns=self.ns_wordpress))
-      post['path'] = self._get_text(node, 'link')[len(channel_link):]
-    post['title'] = self._get_text(node, 'title')
+      post['path'] = self._get_text(node, 'link')[len(channel_link):] or None
+    post['title'] = self._get_text(node, 'title') or None
     post['body'] = self._expand_wp_tags(
       self._get_text(node, 'encoded',
                      ns=self.ns_rss).replace(u'\xa0', ' '))
@@ -290,19 +290,20 @@ class WordpressMigration(BaseMigration):
       if self._get_text(comment, 'comment_approved', self.ns_wordpress) != '1':
         continue
       cmt = {}
-      cmt['message'] = self._get_text(comment, 'comment_content',
-                                      ns=self.ns_wordpress).encode('utf-8')
+      cmt['message'] = (self._get_text(comment, 'comment_content',
+                                       ns=self.ns_wordpress).encode('utf-8')
+                        or None)
       author = self._get_text(comment, 'comment_author', ns=self.ns_wordpress)
-      if author is not None:
+      if author:
         author = author.encode('utf-8')
       email = self._get_text(comment, 'comment_author_email',
                              ns=self.ns_wordpress)
-      if email is not None:
+      if email:
         email = email.encode('utf-8')
       cmt['author_name'] = author or 'Someone'
       cmt['author_email'] = email or 'someone@%s' % config.host
       url = self._get_text(comment, 'comment_author_url',ns=self.ns_wordpress)
-      if url is not None:
+      if url:
         url = url.encode('utf-8')
       cmt['author_url'] = url
       cmt['date'] = self._parse_date(self._get_text(comment, 'comment_date',
