@@ -1,9 +1,11 @@
 import datetime
 import hashlib
 
+from google.appengine.api import memcache
 from google.appengine.api.labs import taskqueue
 from google.appengine.ext import db
 from google.appengine.ext import deferred
+from google.appengine.datastore import entity_pb
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -38,7 +40,14 @@ def get(path):
   Returns:
     A StaticContent object, or None if no content exists for this path.
   """
-  return StaticContent.get_by_key_name(path)
+  entity = memcache.get(path)
+  if entity:
+    entity = db.model_from_protobuf(entity_pb.EntityProto(entity))
+  else:
+   entity = StaticContent.get_by_key_name(path)
+   memcache.set(path, db.model_to_protobuf(entity).Encode())
+  
+  return entity
 
 
 def set(path, body, content_type, indexed=True, **kwargs):
@@ -60,6 +69,7 @@ def set(path, body, content_type, indexed=True, **kwargs):
       indexed=indexed,
       **kwargs)
   content.put()
+  memcache.replace(path, db.model_to_protobuf(content).Encode())
   try:
     now = datetime.datetime.now().replace(second=0, microsecond=0)
     eta = now.replace(second=0, microsecond=0) + datetime.timedelta(seconds=65)
