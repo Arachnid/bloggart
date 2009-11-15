@@ -44,8 +44,9 @@ def get(path):
   if entity:
     entity = db.model_from_protobuf(entity_pb.EntityProto(entity))
   else:
-   entity = StaticContent.get_by_key_name(path)
-   memcache.set(path, db.model_to_protobuf(entity).Encode())
+    entity = StaticContent.get_by_key_name(path)
+    if entity:
+      memcache.set(path, db.model_to_protobuf(entity).Encode())
   
   return entity
 
@@ -117,6 +118,7 @@ class StaticContentHandler(webapp.RequestHandler):
     content = get(path)
     if not content:
       self.error(404)
+      self.response.out.write(utils.render_template('404.html'))
       return
 
     serve = True
