@@ -49,7 +49,7 @@ class BlogPost(db.Model):
 
   @property
   def hash(self):
-    val = (self.title, self.body, self.tags, self.published)
+    val = (self.title, self.body, self.published)
     return hashlib.sha1(str(val)).hexdigest()
 
   @property
