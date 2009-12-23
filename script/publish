@@ -1,0 +1,78 @@
+#!/usr/bin/env python
+
+"""
+Publish and tag a given file, with title and body extracted from the HTML
+markup of the file.  The corresponding draft page, if any, will be deleted if
+the publish request succeed.
+
+Usage: publish [-l] [-t tagstring] [-f] filepath
+
+By default, requests are made to {APPID}.appspot.com. The script will fail if
+content already exists on the given path.
+
+Options:
+	  -l    make requests to localhost:8080
+    -t    use the supplied tags, which should be given as a comma-separated string
+	  -f    force update
+"""
+
+import BeautifulSoup
+import datetime
+import getopt
+import os
+import sys
+
+host = None
+forced = False
+tags = []
+
+opts, args = getopt.getopt(sys.argv[1:], 'flt:')
+for o, v in opts:
+	if o == '-l':
+		host = 'localhost:8080'
+	elif o == '-t':
+		tags = set(map(unicode, v.split(',')))
+	elif o == '-f':
+		forced = True
+filename = args[0]
+
+import remote
+remote.attach(host)
+
+from google.appengine.api import memcache
+
+import config
+import models
+import static
+import utils
+
+
+soup = BeautifulSoup.BeautifulSoup(open(filename).read())
+title = unicode(soup.title.string)
+body = u''.join(unicode(s) for s in soup.body.contents if s)
+post = models.BlogPost(
+		title=title,
+		body=body,
+		tags=tags,
+		published=datetime.datetime.now()
+	)
+path = utils.format_post_path(post, 0)
+
+if not static.add(path, '', config.html_mime_type):
+	if forced:
+		post = models.BlogPost.gql('WHERE path = :1', path).get()
+		post.title = title
+		post.body = body
+		post.tags = tags
+	else:
+		sys.exit("error: content exists on path %s, use -f to force update" % path)
+
+static.get(path).delete()
+post.put()
+post.publish()
+
+draftpath = '/draft/'+ utils.slugify(title)
+draft = static.get(draftpath)
+if draft:
+	draft.delete()
+	memcache.delete(draftpath)

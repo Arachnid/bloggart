@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+
+"""
+Post a single unindexed page at /draft/title, where the title and body of the
+page is extracted from the HTML markup of the given file.
+
+Usage: draft [-l] filepath
+
+By default, requests are made to {APPID}.appspot.com.
+The script will print out the URL of the draft page if success.
+
+Options:
+    -l    make requests to to localhost:8080
+"""
+import BeautifulSoup
+import datetime
+import getopt
+import sys
+import os
+
+if sys.argv[1] == '-l':
+	host = 'localhost:8080'
+	filename = sys.argv[2]
+else:
+	host = None
+	filename = sys.argv[1]
+
+import remote
+remote.attach(host)
+
+import config
+import models
+import static
+import utils
+
+
+soup = BeautifulSoup.BeautifulSoup(open(filename).read())
+title = unicode(soup.title.string)
+post = models.BlogPost(
+		title=title,
+		body=u''.join(unicode(s) for s in soup.body.contents if s),
+		published=datetime.datetime.now()
+	)
+path = '/draft/' + utils.slugify(title)
+rendered = utils.render_template("draft.html", {'post': post})
+
+static.set(path, rendered, config.html_mime_type, indexed=False)
+
+print 'http://' + (host or (remote.APPID + '.appspot.com')) + path
