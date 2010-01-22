@@ -79,10 +79,12 @@ class PostContentGenerator(ContentGenerator):
     import models
     
     q = models.BlogPost.all().order('-published')
+    q.filter('published !=', datetime.datetime.max)# Filter drafts out
     q.filter('published <', post.published)
     prev = q.fetch(1)
     
     q = models.BlogPost.all().order('published')
+    q.filter('published !=', datetime.datetime.max)# Filter drafts out
     q.filter('published >', post.published)
     next = q.fetch(1)
     if len(prev) > 0:
