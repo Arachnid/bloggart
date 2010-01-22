@@ -90,12 +90,14 @@ class PostHandler(BaseHandler):
                     initial={'draft': post and post.published is None})
     if form.is_valid():
       post = form.save(commit=False)
-      if form.clean_data['draft']:
+      if form.clean_data['draft']:# Draft post
         post.published = datetime.datetime.max
         post.put()
       else:
-        if not post.path:
-          post.published = datetime.datetime.now()
+        if not post.path: # Publish post
+          post.updated = post.published = datetime.datetime.now()
+        else:# Edit post
+          post.updated = datetime.datetime.now()
         post.publish()
       self.render_to_response("published.html", {
           'post': post,

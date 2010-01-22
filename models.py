@@ -26,7 +26,7 @@ class BlogPost(db.Model):
   body = db.TextProperty(required=True)
   tags = aetycoon.SetProperty(basestring, indexed=False)
   published = db.DateTimeProperty()
-  updated = db.DateTimeProperty(auto_now=True)
+  updated = db.DateTimeProperty(auto_now=False)
   deps = aetycoon.PickleProperty()
 
   @aetycoon.TransformProperty(tags)
