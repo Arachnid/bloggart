@@ -1,6 +1,18 @@
 {% extends "admin/base.html" %}
 {% block title %}All Posts{% endblock %}
 {% block body %}
+  <script type="text/javascript">
+    function delete_post(id){
+      var decision = confirm("Are you sure you want to delete this post.");
+      if(decision){
+        document.forms['delete_form_' + id].submit();
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+  </script>
   <h2>All Posts</h2>
   {% ifnotequal last_post -1 %}
     <p>Posts {{offset|add:1}} to {{last_post|add:1}}</p>
@@ -18,6 +30,12 @@
 	      |
 	    {% endif %}
 	    <a href="{{config.url_prefix}}/admin/post/{{post.key.id}}">Edit</a>
+        |
+      <form id="delete_form_{{post.key.id}}" 
+        action="{{config.url_prefix}}/admin/post/delete/{{post.key.id}}" method="post" 
+        style="display:inline;margin:0;padding:0;background:none;border:none;">
+        <a href="#" onclick="javascript:delete_post('{{post.key.id}}');">Delete</a>
+      </form>
 	  </td>
 	</tr>
       {% endfor %}

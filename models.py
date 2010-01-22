@@ -80,6 +80,25 @@ class BlogPost(db.Model):
         else:
           generator_class.generate_resource(self, dep)
     self.put()
+
+  def remove(self):
+    if not self.is_saved():   
+      return
+    if not self.deps:
+      self.deps = {}
+    # It is important that the get_deps() return the post dependency
+    # before the list dependencies as the BlogPost entity gets deleted
+    # while calling PostContentGenerator.
+    for generator_class, deps in self.get_deps(regenerate=True):
+      for dep in deps:
+        if generator_class.can_defer:
+          deferred.defer(generator_class.generate_resource, None, dep)
+        else:
+          if generator_class.name() == 'PostContentGenerator':
+            generator_class.generate_resource(self, dep, action='delete')
+            self.delete()
+          else:
+            generator_class.generate_resource(self, dep)  
   
   def get_deps(self, regenerate=False):
     for generator_class in generators.generator_list:

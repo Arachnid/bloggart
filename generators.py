@@ -98,12 +98,16 @@ class PostContentGenerator(ContentGenerator):
     return prev,next
 
   @classmethod
-  def generate_resource(cls, post, resource):
+  def generate_resource(cls, post, resource, action='post'):
     import models
     if not post:
       post = models.BlogPost.get_by_id(resource)
     else:
       assert resource == post.key().id()
+    # Handle deletion
+    if action == 'delete':
+      static.remove(post.path)
+      return
     template_vals = {
         'post': post,
     }

@@ -99,7 +99,20 @@ def add(path, body, content_type, indexed=True, **kwargs):
     return set(path, body, content_type, indexed, **kwargs)
   return db.run_in_transaction(_tx)
 
+def remove(path):
+  """Deletes a StaticContent.
   
+  Args:
+    path: Path of the static content to be removed.
+  """
+  memcache.delete(path)
+  def _tx():
+    content = StaticContent.get_by_key_name(path) 
+    if not content:
+      return
+    content.delete() 
+  return db.run_in_transaction(_tx)
+
 class StaticContentHandler(webapp.RequestHandler):
   def output_content(self, content, serve=True):
     if content.content_type:

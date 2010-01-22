@@ -105,6 +105,14 @@ class PostHandler(BaseHandler):
     else:
       self.render_form(form)
 
+class DeleteHandler(BaseHandler):
+  @with_post
+  def post(self, post):
+    if post.path:# Published post
+      post.remove()
+    else:# Draft
+      post.delete()
+    self.render_to_response("deleted.html", None)
 
 class RegenerateHandler(BaseHandler):
   def post(self):
