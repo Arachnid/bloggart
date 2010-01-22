@@ -58,6 +58,7 @@ class BlogPost(db.Model):
     return hashlib.sha1(str(val)).hexdigest()
   
   def publish(self):
+    regenerate = False
     if not self.path:
       num = 0
       content = None
@@ -67,9 +68,12 @@ class BlogPost(db.Model):
         num += 1
       self.path = path
       self.put()
+      # Force regenerate on new publish. Also helps with generation of
+      # chronologically previous and next page.
+      regenerate = True 
     if not self.deps:
       self.deps = {}
-    for generator_class, deps in self.get_deps():
+    for generator_class, deps in self.get_deps(regenerate=regenerate):
       for dep in deps:
         if generator_class.can_defer:
           deferred.defer(generator_class.generate_resource, None, dep)

@@ -15,6 +15,12 @@
   <p class="postmeta">
     <span class="date">{{post.published|date:"d F, Y"}}</span>
   </p>
+  {% if prev %}
+    <a id="prev" href="{{prev.path}}">Previous Post</a>
+  {% endif %}
+  {% if next %}
+    <a id="next" href="{{next.path}}">Next Post</a>
+  {% endif %}
   
   {% if config.disqus_forum %}
     <h3 id="comments">Comments</h3>

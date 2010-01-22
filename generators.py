@@ -74,6 +74,28 @@ class PostContentGenerator(ContentGenerator):
     return post.hash
 
   @classmethod
+  def get_prev_next(cls, post):
+    """Retrieves the chronologically previous and next post for this post""" 
+    import models
+    
+    q = models.BlogPost.all().order('-published')
+    q.filter('published <', post.published)
+    prev = q.fetch(1)
+    
+    q = models.BlogPost.all().order('published')
+    q.filter('published >', post.published)
+    next = q.fetch(1)
+    if len(prev) > 0:
+      prev = prev[0]
+    else:
+      prev = None
+    if len(next) > 0:
+      next = next[0]
+    else:
+      next = None
+    return prev,next
+
+  @classmethod
   def generate_resource(cls, post, resource):
     import models
     if not post:
@@ -83,10 +105,41 @@ class PostContentGenerator(ContentGenerator):
     template_vals = {
         'post': post,
     }
+    prev, next = cls.get_prev_next(post)
+    if prev is not None:
+      template_vals['prev']=prev
+    if next is not None:
+      template_vals['next']=next
     rendered = utils.render_template("post.html", template_vals)
     static.set(post.path, rendered, config.html_mime_type)
 generator_list.append(PostContentGenerator)
 
+class PostPrevNextContentGenerator(PostContentGenerator):
+  """ContentGenerator for the blog posts chronologically before and after the blog post."""
+  
+  @classmethod
+  def get_resource_list(cls, post):
+    prev, next = cls.get_prev_next(post)
+    resource_list = [res.key().id() for res in (prev,next) if res is not None]
+    return resource_list 
+  
+  @classmethod
+  def generate_resource(cls, post, resource):
+    import models
+    post = models.BlogPost.get_by_id(resource)
+    if post is None:
+      return
+    template_vals = {
+        'post': post,
+    }
+    prev, next = cls.get_prev_next(post)
+    if prev is not None:
+     template_vals['prev']=prev
+    if next is not None:
+     template_vals['next']=next
+    rendered = utils.render_template("post.html", template_vals)
+    static.set(post.path, rendered, config.html_mime_type)
+generator_list.append(PostPrevNextContentGenerator)
 
 class ListingContentGenerator(ContentGenerator):
   path = None
