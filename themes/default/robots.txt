@@ -1,1 +1,1 @@
-Sitemap: http://{{config.host}}/sitemap.xml
+Sitemap: http://{{config.host}}{{config.url_prefix}}/sitemap.xml

@@ -7,7 +7,7 @@
       {% if post.tags %}
         | Filed under
         {% for tag in post.tag_pairs %}
-          <a href="/tag/{{tag.1|escape}}">{{tag.0|escape}}</a>{% if not forloop.last %},{% endif %}
+          <a href="{{config.url_prefix}}/tag/{{tag.1|escape}}">{{tag.0|escape}}</a>{% if not forloop.last %},{% endif %}
         {% endfor %}
       {% endif %}
     </p>

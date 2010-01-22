@@ -2,30 +2,30 @@
 {% block title %}{{config.blog_name}}{% endblock %}
 {% block body %}
   {% for post in posts %}
-    <h2><a href="{{post.path}}">{{post.title|escape}}</a></h2>
+    <h2><a href="{{config.url_prefix}}{{post.path}}">{{post.title|escape}}</a></h2>
     <p class="post-info">
       Posted by {{config.author_name}}
       {% if post.tags %}
         | Filed under
         {% for tag in post.tag_pairs %}
-          <a href="/tag/{{tag.1|escape}}">{{tag.0|escape}}</a>{% if not forloop.last %},{% endif %}
+          <a href="{{config.url_prefix}}/tag/{{tag.1|escape}}">{{tag.0|escape}}</a>{% if not forloop.last %},{% endif %}
         {% endfor %}
       {% endif %}
     </p>
     {{post.summary}}
     <p class="postmeta">
-      <a href="{{post.path}}" class="readmore">Read more</a> |
+      <a href="{{config.url_prefix}}{{post.path}}" class="readmore">Read more</a> |
       {% if config.disqus_forum %}
-        <a href="{{post.path}}#disqus_thread" class="readmore">Comments</a> |
+        <a href="{{config.url_prefix}}{{post.path}}#disqus_thread" class="readmore">Comments</a> |
       {% endif %}
       <span class="date">{{post.published|date:"d F, Y"}}</span>
     </p>
   {% endfor %}
   {% if prev_page %}
-    <a id="prev" href="{{prev_page}}">Newer</a>
+    <a id="prev" href="{{config.url_prefix}}{{prev_page}}">Newer</a>
   {% endif %}
   {% if next_page %}
-    <a id="next" href="{{next_page}}">Older</a>
+    <a id="next" href="{{config.url_prefix}}{{next_page}}">Older</a>
   {% endif %}
   {% if config.disqus_forum %}
     <script type="text/javascript">

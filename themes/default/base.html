@@ -3,33 +3,33 @@
 <head>
   <title>{% block title %}Bloggart{% endblock %}</title>
   {% block style %}
-  <link rel="stylesheet" type="text/css" media="screen" href="/static/default/css/screen.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{config.url_prefix}}/static/default/css/screen.css" />
   {% endblock %}
   {% if config.highlighting_style %}
-  <link rel="stylesheet" type="text/css" media="screen" href="/static/default/css/pygments_{{config.highlighting_style}}.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{config.url_prefix}}/static/default/css/pygments_{{config.highlighting_style}}.css" />
   {% endif %}
-  <link rel="alternate" type="application/atom+xml" href="/feeds/atom.xml" />
+  <link rel="alternate" type="application/atom+xml" href="{{config.url_prefix}}/feeds/atom.xml" />
   {% block head %}{% endblock %}
 </head>
 <body>
 	<div id="header-wrap"><div id="header" class="container_16">						
-		<h1 id="logo-text"><a href="/" title="">{{config.blog_name}}</a></h1>		
+		<h1 id="logo-text"><a href="{{config.url_prefix}}/" title="">{{config.blog_name}}</a></h1>		
 		<p id="intro">{{config.slogan}}</p>
 		<div  id="nav">
 			<ul>
-				<li{% ifequal generator_class "IndexContentGenerator" %} id="current"{% endifequal %}><a href="/">Home</a></li>
+				<li{% ifequal generator_class "IndexContentGenerator" %} id="current"{% endifequal %}><a href="{{config.url_prefix}}/">Home</a></li>
         {% block menu %}{% endblock %}
 			</ul>
 		</div>		
 		<div id="header-image"></div> 
-    <form id="quick-search" action="/search" method="get">
+    <form id="quick-search" action="{{config.url_prefix}}/search" method="get">
       <p>
         <label for="q">Search:</label>
         <input type="hidden" name="cref" value="http://{{config.host}}/cse.xml" />
         <input type="hidden" name="cof" value="FORID:11" />
         <input type="hidden" name="ie" value="UTF-8" />
         <input class="tbox" type="text" name="q" size="31" />
-        <input class="btn" type="image" name="sa" value="Search" src="/static/default/images/search.gif" alt="Search" />
+        <input class="btn" type="image" name="sa" value="Search" src="{{config.url_prefix}}/static/default/images/search.gif" alt="Search" />
       </p>
     </form>
     <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=quick-search&lang=en"></script>
@@ -58,8 +58,8 @@
 			Design by : <a href="http://www.styleshout.com/">styleshout</a>												
 			</p>	
 			<p class="bottom-right" >
-				<a href="/">Home</a> |
-        <a href="/feeds/atom.xml">Atom</a> |
+				<a href="{{config.url_prefix}}/">Home</a> |
+        <a href="{{config.url_prefix}}/feeds/atom.xml">Atom</a> |
 				<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a> | 
 		   	<a href="http://validator.w3.org/check/referer">XHTML</a>
 			</p>

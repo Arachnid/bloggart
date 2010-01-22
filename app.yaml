@@ -12,13 +12,13 @@ handlers:
   script: $PYTHON_LIB/google/appengine/ext/deferred/deferred.py
   login: admin
 
-- url: /admin/.*
+- url: /blog/admin/.*
   script: admin.py
   login: admin
 
-- url: /static/([^/]+)/(.*)
+- url: /blog/static/([^/]+)/(.*)
   static_files: themes/\1/static/\2
   upload: themes/[^/]+/static/.*
 
-- url: /.*
+- url: /blog/.*
   script: static.py

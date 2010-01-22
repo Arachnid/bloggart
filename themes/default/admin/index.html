@@ -10,14 +10,14 @@
       </thead>
       {% for post in posts %}
         <tr>
-          <td><a href="post/{{post.key.id}}">{{post.title|escape}}</a></td>
+          <td><a href="{{config.url_prefix}}/admin/post/{{post.key.id}}">{{post.title|escape}}</a></td>
           <td>{% if post.path %}{{post.published|date:"Y-m-d"}}{% else %}Draft{% endif %}</td>
 	  <td>
 	    {% if post.path %}
-	      <a href="{{post.path}}">View</a>
+	      <a href="{{config.url_prefix}}{{post.path}}">View</a>
 	      |
 	    {% endif %}
-	    <a href="post/{{post.key.id}}">Edit</a>
+	    <a href="{{config.url_prefix}}/admin/post/{{post.key.id}}">Edit</a>
 	  </td>
 	</tr>
       {% endfor %}
@@ -25,7 +25,7 @@
   {% else %}
     <p>
       No posts yet.<br />
-      <a href="/admin/newpost">Write your first post.</a>
+      <a href="{{config.url_prefix}}/admin/newpost">Write your first post.</a>
     </p>
   {% endifnotequal %}
   {% ifnotequal offset 0 %}
@@ -36,7 +36,7 @@
   {% endif %}
 
   <h2>Admin Actions</h2>
-  <form method="post" action="regenerate">
+  <form method="post" action="{{config.url_prefix}}/admin/regenerate">
     <input type="submit" value="Regenerate all posts" />
   </form>
 {% endblock %}

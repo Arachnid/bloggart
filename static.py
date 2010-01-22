@@ -12,6 +12,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 import fix_path
 import aetycoon
+import config
 import utils
 
 
@@ -136,7 +137,7 @@ class StaticContentHandler(webapp.RequestHandler):
     self.output_content(content, serve)
 
 
-application = webapp.WSGIApplication([('(/.*)', StaticContentHandler)])
+application = webapp.WSGIApplication([(config.url_prefix + '(/.*)', StaticContentHandler)])
 
 
 def main():

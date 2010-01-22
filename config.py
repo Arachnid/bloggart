@@ -8,7 +8,7 @@ author_name = 'the author'
 slogan = 'This is my blog'
 
 # The hostname this site will primarially serve off (used for Atom feeds)
-host = 'localhost'
+host = 'localhost:8080'
 
 # Selects the theme to use. Theme names correspond to directories under
 # the 'themes' directory, containing templates and static content.
@@ -68,3 +68,7 @@ default_markup = 'html'
 # 'vs', 'trac', 'tango', 'fruity', 'autumn', 'bw', 'emacs', 'pastie',
 # 'friendly', 'native'.
 highlighting_style = 'friendly'
+
+# Absolute url of the blog application use '/blog' for host/blog/ 
+# and '' for host/.Also remember to change app.yaml accordingly 
+url_prefix = '/blog'
