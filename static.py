@@ -123,11 +123,12 @@ class StaticContentHandler(webapp.RequestHandler):
         self.response.out.write(utils.render_template('404.html'))
         return
     else:
-      path = path[len(config.url_prefix):]# Strip off prefix
-      if path in ROOT_ONLY_FILES:# This lives at root
-        self.error(404)
-        self.response.out.write(utils.render_template('404.html'))
-        return
+      if config.url_prefix != '':
+        path = path[len(config.url_prefix):]# Strip off prefix
+        if path in ROOT_ONLY_FILES:# This lives at root
+          self.error(404)
+          self.response.out.write(utils.render_template('404.html'))
+          return
     content = get(path)
     if not content:
       self.error(404)
