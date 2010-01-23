@@ -9,16 +9,16 @@ handlers:
   login: admin
 
 - url: /_ah/queue/deferred
-  script: $PYTHON_LIB/google/appengine/ext/deferred/deferred.py
+  script: $PYTHON_LIB/google/appengine/ext/deferred/handler.py 
   login: admin
 
-- url: /blog/admin/.*
+- url: /admin/.*
   script: admin.py
   login: admin
 
-- url: /blog/static/([^/]+)/(.*)
+- url: /static/([^/]+)/(.*)
   static_files: themes/\1/static/\2
   upload: themes/[^/]+/static/.*
 
-- url: /blog/.*
+- url: /.*
   script: static.py
