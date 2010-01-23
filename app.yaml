@@ -9,7 +9,7 @@ handlers:
   login: admin
 
 - url: /_ah/queue/deferred
-  script: $PYTHON_LIB/google/appengine/ext/deferred/handler.py 
+  script: deferred.py
   login: admin
 
 - url: /admin/.*
