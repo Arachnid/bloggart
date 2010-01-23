@@ -16,10 +16,10 @@
     <span class="date">{{post.published|date:"d F, Y"}}</span>
   </p>
   {% if prev %}
-    <a id="prev" href="{{prev.path}}">Previous Post</a>
+    <a id="prev" href="{{config.url_prefix}}{{prev.path}}">Previous Post</a>
   {% endif %}
   {% if next %}
-    <a id="next" href="{{next.path}}">Next Post</a>
+    <a id="next" href="{{config.url_prefix}}{{next.path}}">Next Post</a>
   {% endif %}
   
   {% if config.disqus_forum %}
