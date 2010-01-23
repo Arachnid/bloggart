@@ -18,6 +18,7 @@ import utils
 
 HTTP_DATE_FMT = "%a, %d %b %Y %H:%M:%S GMT"
 
+ROOT_ONLY_FILES = ['/robots.txt','/' + config.google_site_verification]
 
 class StaticContent(db.Model):
   """Container for statically served content.
@@ -116,6 +117,17 @@ class StaticContentHandler(webapp.RequestHandler):
       self.response.set_status(304)
   
   def get(self, path):
+    if not path.startswith(config.url_prefix):
+      if path not in ROOT_ONLY_FILES:
+        self.error(404)
+        self.response.out.write(utils.render_template('404.html'))
+        return
+    else:
+      path = path[len(config.url_prefix):]# Strip off prefix
+      if path in ROOT_ONLY_FILES:# This lives at root
+        self.error(404)
+        self.response.out.write(utils.render_template('404.html'))
+        return
     content = get(path)
     if not content:
       self.error(404)
@@ -137,7 +149,9 @@ class StaticContentHandler(webapp.RequestHandler):
     self.output_content(content, serve)
 
 
-application = webapp.WSGIApplication([(config.url_prefix + '(/.*)', StaticContentHandler)])
+application = webapp.WSGIApplication([
+                ('(/.*)', StaticContentHandler),
+              ])
 
 
 def main():
