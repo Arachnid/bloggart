@@ -137,11 +137,15 @@ class StaticContentHandler(webapp.RequestHandler):
 
     serve = True
     if 'If-Modified-Since' in self.request.headers:
-      last_seen = datetime.datetime.strptime(
-          self.request.headers['If-Modified-Since'],
-          HTTP_DATE_FMT)
-      if last_seen >= content.last_modified.replace(microsecond=0):
-        serve = False
+      try:
+        last_seen = datetime.datetime.strptime(
+            self.request.headers['If-Modified-Since'].split(';')[0],# IE8 '; length=XXXX' as extra arg bug
+            HTTP_DATE_FMT)
+        if last_seen >= content.last_modified.replace(microsecond=0):
+          serve = False
+      except ValueError, e:
+        import logging
+        logging.error('StaticContentHandler in static.py, ValueError:' + self.request.headers['If-Modified-Since'])
     if 'If-None-Match' in self.request.headers:
       etags = [x.strip('" ')
                for x in self.request.headers['If-None-Match'].split(',')]
