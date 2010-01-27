@@ -7,7 +7,7 @@
       {% if post.tags %}
         | Filed under
         {% for tag in post.tag_pairs %}
-          <a href="/tag/{{tag.1|escape}}">{{tag.0|escape}}</a>{% if not forloop.last %},{% endif %}
+          <a href="{{config.url_prefix}}/tag/{{tag.1|escape}}">{{tag.0|escape}}</a>{% if not forloop.last %},{% endif %}
         {% endfor %}
       {% endif %}
     </p>
@@ -15,6 +15,12 @@
   <p class="postmeta">
     <span class="date">{{post.published|date:"d F, Y"}}</span>
   </p>
+  {% if prev %}
+    <a id="prev" href="{{config.url_prefix}}{{prev.path}}">Previous Post</a>
+  {% endif %}
+  {% if next %}
+    <a id="next" href="{{config.url_prefix}}{{next.path}}">Next Post</a>
+  {% endif %}
   
   {% if config.disqus_forum %}
     <h3 id="comments">Comments</h3>

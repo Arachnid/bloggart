@@ -6,7 +6,7 @@
       <p>Your changes have been saved (but not published)</p>
     {% else %}
       <p>Your post has been published!</p>
-      <p><a href="{{post.path}}">View your post</a></p>
+      <p><a href="{{config.url_prefix}}{{post.path}}">View your post</a></p>
     {% endif %}
   {% else %}
     <p>Your draft post has been saved.</p>

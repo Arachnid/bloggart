@@ -68,3 +68,7 @@ default_markup = 'html'
 # 'vs', 'trac', 'tango', 'fruity', 'autumn', 'bw', 'emacs', 'pastie',
 # 'friendly', 'native'.
 highlighting_style = 'friendly'
+
+# Absolute url of the blog application use '/blog' for host/blog/ 
+# and '' for host/.Also remember to change app.yaml accordingly 
+url_prefix = ''

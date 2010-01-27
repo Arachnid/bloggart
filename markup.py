@@ -25,6 +25,10 @@ from django.utils import text
 import config
 import utils
 
+# Fix sys.path
+import fix_path
+fix_path.fix_sys_path()
+
 # Import markup module from lib/
 import markdown
 import markdown_processor

@@ -12,7 +12,7 @@
     <LookAndFeel nonprofit="false" />
   </CustomSearchEngine>  
   <Annotations>
-    <Annotation about="http://{{config.host}}/*">
+    <Annotation about="http://{{config.host}}{{config.url_prefix}}/*">
       <Label name="cse_include" />
     </Annotation>
   </Annotations>

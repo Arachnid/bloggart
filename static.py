@@ -1,20 +1,24 @@
 import datetime
 import hashlib
 
+from google.appengine.api import memcache
 from google.appengine.api.labs import taskqueue
 from google.appengine.ext import db
 from google.appengine.ext import deferred
+from google.appengine.datastore import entity_pb
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 import fix_path
 import aetycoon
+import config
 import utils
 
 
 HTTP_DATE_FMT = "%a, %d %b %Y %H:%M:%S GMT"
 
+ROOT_ONLY_FILES = ['/robots.txt','/' + config.google_site_verification]
 
 class StaticContent(db.Model):
   """Container for statically served content.
@@ -38,7 +42,15 @@ def get(path):
   Returns:
     A StaticContent object, or None if no content exists for this path.
   """
-  return StaticContent.get_by_key_name(path)
+  entity = memcache.get(path)
+  if entity:
+    entity = db.model_from_protobuf(entity_pb.EntityProto(entity))
+  else:
+    entity = StaticContent.get_by_key_name(path)
+    if entity:
+      memcache.set(path, db.model_to_protobuf(entity).Encode())
+  
+  return entity
 
 
 def set(path, body, content_type, indexed=True, **kwargs):
@@ -60,6 +72,7 @@ def set(path, body, content_type, indexed=True, **kwargs):
       indexed=indexed,
       **kwargs)
   content.put()
+  memcache.replace(path, db.model_to_protobuf(content).Encode())
   try:
     now = datetime.datetime.now().replace(second=0, microsecond=0)
     eta = now.replace(second=0, microsecond=0) + datetime.timedelta(seconds=65)
@@ -86,7 +99,20 @@ def add(path, body, content_type, indexed=True, **kwargs):
     return set(path, body, content_type, indexed, **kwargs)
   return db.run_in_transaction(_tx)
 
+def remove(path):
+  """Deletes a StaticContent.
   
+  Args:
+    path: Path of the static content to be removed.
+  """
+  memcache.delete(path)
+  def _tx():
+    content = StaticContent.get_by_key_name(path) 
+    if not content:
+      return
+    content.delete() 
+  return db.run_in_transaction(_tx)
+
 class StaticContentHandler(webapp.RequestHandler):
   def output_content(self, content, serve=True):
     if content.content_type:
@@ -104,18 +130,35 @@ class StaticContentHandler(webapp.RequestHandler):
       self.response.set_status(304)
   
   def get(self, path):
+    if not path.startswith(config.url_prefix):
+      if path not in ROOT_ONLY_FILES:
+        self.error(404)
+        self.response.out.write(utils.render_template('404.html'))
+        return
+    else:
+      if config.url_prefix != '':
+        path = path[len(config.url_prefix):]# Strip off prefix
+        if path in ROOT_ONLY_FILES:# This lives at root
+          self.error(404)
+          self.response.out.write(utils.render_template('404.html'))
+          return
     content = get(path)
     if not content:
       self.error(404)
+      self.response.out.write(utils.render_template('404.html'))
       return
 
     serve = True
     if 'If-Modified-Since' in self.request.headers:
-      last_seen = datetime.datetime.strptime(
-          self.request.headers['If-Modified-Since'],
-          HTTP_DATE_FMT)
-      if last_seen >= content.last_modified.replace(microsecond=0):
-        serve = False
+      try:
+        last_seen = datetime.datetime.strptime(
+            self.request.headers['If-Modified-Since'].split(';')[0],# IE8 '; length=XXXX' as extra arg bug
+            HTTP_DATE_FMT)
+        if last_seen >= content.last_modified.replace(microsecond=0):
+          serve = False
+      except ValueError, e:
+        import logging
+        logging.error('StaticContentHandler in static.py, ValueError:' + self.request.headers['If-Modified-Since'])
     if 'If-None-Match' in self.request.headers:
       etags = [x.strip('" ')
                for x in self.request.headers['If-None-Match'].split(',')]
@@ -124,7 +167,9 @@ class StaticContentHandler(webapp.RequestHandler):
     self.output_content(content, serve)
 
 
-application = webapp.WSGIApplication([('(/.*)', StaticContentHandler)])
+application = webapp.WSGIApplication([
+                ('(/.*)', StaticContentHandler),
+              ])
 
 
 def main():

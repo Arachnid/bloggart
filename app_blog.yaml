@@ -1,5 +1,5 @@
-application: notdot-blog
-version: bloggart
+application: bloggart-demo
+version: live
 runtime: python
 api_version: 1
 
@@ -9,14 +9,14 @@ handlers:
   login: admin
 
 - url: /_ah/queue/deferred
-  script: deferred.py
+  script: $PYTHON_LIB/google/appengine/ext/deferred/handler.py 
   login: admin
 
-- url: /admin/.*
+- url: /blog/admin/.*
   script: admin.py
   login: admin
 
-- url: /static/([^/]+)/(.*)
+- url: /blog/static/([^/]+)/(.*)
   static_files: themes/\1/static/\2
   upload: themes/[^/]+/static/.*
 

@@ -90,12 +90,14 @@ class PostHandler(BaseHandler):
                     initial={'draft': post and post.published is None})
     if form.is_valid():
       post = form.save(commit=False)
-      if form.clean_data['draft']:
+      if form.clean_data['draft']:# Draft post
         post.published = datetime.datetime.max
         post.put()
       else:
-        if not post.path:
-          post.published = datetime.datetime.now()
+        if not post.path: # Publish post
+          post.updated = post.published = datetime.datetime.now()
+        else:# Edit post
+          post.updated = datetime.datetime.now()
         post.publish()
       self.render_to_response("published.html", {
           'post': post,
@@ -103,6 +105,14 @@ class PostHandler(BaseHandler):
     else:
       self.render_form(form)
 
+class DeleteHandler(BaseHandler):
+  @with_post
+  def post(self, post):
+    if post.path:# Published post
+      post.remove()
+    else:# Draft
+      post.delete()
+    self.render_to_response("deleted.html", None)
 
 class RegenerateHandler(BaseHandler):
   def post(self):

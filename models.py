@@ -26,7 +26,7 @@ class BlogPost(db.Model):
   body = db.TextProperty(required=True)
   tags = aetycoon.SetProperty(basestring, indexed=False)
   published = db.DateTimeProperty()
-  updated = db.DateTimeProperty(auto_now=True)
+  updated = db.DateTimeProperty(auto_now=False)
   deps = aetycoon.PickleProperty()
 
   @aetycoon.TransformProperty(tags)
@@ -58,6 +58,7 @@ class BlogPost(db.Model):
     return hashlib.sha1(str(val)).hexdigest()
   
   def publish(self):
+    regenerate = False
     if not self.path:
       num = 0
       content = None
@@ -67,15 +68,37 @@ class BlogPost(db.Model):
         num += 1
       self.path = path
       self.put()
+      # Force regenerate on new publish. Also helps with generation of
+      # chronologically previous and next page.
+      regenerate = True 
     if not self.deps:
       self.deps = {}
-    for generator_class, deps in self.get_deps():
+    for generator_class, deps in self.get_deps(regenerate=regenerate):
       for dep in deps:
         if generator_class.can_defer:
           deferred.defer(generator_class.generate_resource, None, dep)
         else:
           generator_class.generate_resource(self, dep)
     self.put()
+
+  def remove(self):
+    if not self.is_saved():   
+      return
+    if not self.deps:
+      self.deps = {}
+    # It is important that the get_deps() return the post dependency
+    # before the list dependencies as the BlogPost entity gets deleted
+    # while calling PostContentGenerator.
+    for generator_class, deps in self.get_deps(regenerate=True):
+      for dep in deps:
+        if generator_class.can_defer:
+          deferred.defer(generator_class.generate_resource, None, dep)
+        else:
+          if generator_class.name() == 'PostContentGenerator':
+            generator_class.generate_resource(self, dep, action='delete')
+            self.delete()
+          else:
+            generator_class.generate_resource(self, dep)  
   
   def get_deps(self, regenerate=False):
     for generator_class in generators.generator_list:

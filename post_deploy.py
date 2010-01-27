@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 from google.appengine.api.labs import taskqueue
@@ -16,10 +17,9 @@ class PostRegenerator(object):
   def __init__(self):
     self.seen = set()
 
-  def regenerate(self, batch_size=50, start_key=None):
-    q = models.BlogPost.all()
-    if start_key:
-      q.filter('__key__ >', start_key)
+  def regenerate(self, batch_size=50, start_ts=None):
+    q = models.BlogPost.all().order('-published')
+    q.filter('published <', start_ts or datetime.datetime.max)
     posts = q.fetch(batch_size)
     for post in posts:
       for generator_class, deps in post.get_deps(True):
@@ -30,7 +30,7 @@ class PostRegenerator(object):
             deferred.defer(generator_class.generate_resource, None, dep)
       post.put()
     if len(posts) == batch_size:
-      deferred.defer(self.regenerate, batch_size, posts[-1].key())
+      deferred.defer(self.regenerate, batch_size, posts[-1].published)
 
 
 post_deploy_tasks = []

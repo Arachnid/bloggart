@@ -1,6 +1,18 @@
 {% extends "admin/base.html" %}
 {% block title %}All Posts{% endblock %}
 {% block body %}
+  <script type="text/javascript">
+    function delete_post(id){
+      var decision = confirm("Are you sure you want to delete this post.");
+      if(decision){
+        document.forms['delete_form_' + id].submit();
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+  </script>
   <h2>All Posts</h2>
   {% ifnotequal last_post -1 %}
     <p>Posts {{offset|add:1}} to {{last_post|add:1}}</p>
@@ -10,14 +22,20 @@
       </thead>
       {% for post in posts %}
         <tr>
-          <td><a href="post/{{post.key.id}}">{{post.title|escape}}</a></td>
+          <td><a href="{{config.url_prefix}}/admin/post/{{post.key.id}}">{{post.title|escape}}</a></td>
           <td>{% if post.path %}{{post.published|date:"Y-m-d"}}{% else %}Draft{% endif %}</td>
 	  <td>
 	    {% if post.path %}
-	      <a href="{{post.path}}">View</a>
+	      <a href="{{config.url_prefix}}{{post.path}}">View</a>
 	      |
 	    {% endif %}
-	    <a href="post/{{post.key.id}}">Edit</a>
+	    <a href="{{config.url_prefix}}/admin/post/{{post.key.id}}">Edit</a>
+        |
+      <form id="delete_form_{{post.key.id}}" 
+        action="{{config.url_prefix}}/admin/post/delete/{{post.key.id}}" method="post" 
+        style="display:inline;margin:0;padding:0;background:none;border:none;">
+        <a href="#" onclick="javascript:delete_post('{{post.key.id}}');">Delete</a>
+      </form>
 	  </td>
 	</tr>
       {% endfor %}
@@ -25,7 +43,7 @@
   {% else %}
     <p>
       No posts yet.<br />
-      <a href="/admin/newpost">Write your first post.</a>
+      <a href="{{config.url_prefix}}/admin/newpost">Write your first post.</a>
     </p>
   {% endifnotequal %}
   {% ifnotequal offset 0 %}
@@ -36,7 +54,7 @@
   {% endif %}
 
   <h2>Admin Actions</h2>
-  <form method="post" action="regenerate">
+  <form method="post" action="{{config.url_prefix}}/admin/regenerate">
     <input type="submit" value="Regenerate all posts" />
   </form>
 {% endblock %}
