@@ -1,4 +1,10 @@
 {% extends "base.html" %}
+{% block head %}
+  {% ifequal generator_class "IndexContentGenerator" %}
+    <link rel="openid.server" href="https://myvidoop.com/openid" />
+    <link rel="openid.delegate" href="http://arachnid.myvidoop.com" />
+  {% endifequal %}
+{% endblock %}
 {% block title %}{{config.blog_name}}{% endblock %}
 {% block body %}
   {% for post in posts %}
