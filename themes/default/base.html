@@ -3,12 +3,13 @@
 <head>
   <title>{% block title %}Bloggart{% endblock %}</title>
   {% block style %}
-  <link rel="stylesheet" type="text/css" media="screen" href="{{config.url_prefix}}/static/default/css/screen.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{config.url_prefix}}/static/{{config.theme}}/css/screen.css" />
   {% endblock %}
   {% if config.highlighting_style %}
-  <link rel="stylesheet" type="text/css" media="screen" href="{{config.url_prefix}}/static/default/css/pygments_{{config.highlighting_style}}.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{config.url_prefix}}/static/{{config.theme}}/css/pygments_{{config.highlighting_style}}.css" />
   {% endif %}
   <link rel="alternate" type="application/atom+xml" href="{{config.url_prefix}}/feeds/atom.xml" />
+  <link rel="SHORTCUT ICON" href="{{config.url_prefix}}/static/{{config.theme}}/favicon.ico"/>
   {% block head %}{% endblock %}
 </head>
 <body>
@@ -29,7 +30,7 @@
         <input type="hidden" name="cof" value="FORID:11" />
         <input type="hidden" name="ie" value="UTF-8" />
         <input class="tbox" type="text" name="q" size="31" />
-        <input class="btn" type="image" name="sa" value="Search" src="{{config.url_prefix}}/static/default/images/search.gif" alt="Search" />
+        <input class="btn" type="image" name="sa" value="Search" src="{{config.url_prefix}}/static/{{config.theme}}/images/search.gif" alt="Search" />
       </p>
     </form>
     <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=quick-search&lang=en"></script>
