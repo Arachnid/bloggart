@@ -18,8 +18,11 @@ import utils
 
 HTTP_DATE_FMT = "%a, %d %b %Y %H:%M:%S GMT"
 
-ROOT_ONLY_FILES = ['/robots.txt','/' + config.google_site_verification]
-
+if config.google_site_verification is not None:
+    ROOT_ONLY_FILES = ['/robots.txt','/' + config.google_site_verification]
+else:
+    ROOT_ONLY_FILES = ['/robots.txt']
+    
 class StaticContent(db.Model):
   """Container for statically served content.
   
