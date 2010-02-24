@@ -78,6 +78,13 @@ def _get_all_paths():
 
 def _regenerate_sitemap():
   import static
+  import gzip
+  from StringIO import StringIO
   paths = _get_all_paths()
   rendered = render_template('sitemap.xml', {'paths': paths})
   static.set('/sitemap.xml', rendered, 'application/xml', False)
+  s = StringIO()
+  gzip.GzipFile(fileobj=s,mode='wb').write(rendered)
+  s.seek(0)
+  renderedgz = s.read()
+  static.set('/sitemap.xml.gz',renderedgz, 'application/x-gzip', False)
