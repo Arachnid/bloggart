@@ -16,7 +16,7 @@
     <entry>
         <title>{{post.title|escape}}</title>
         <link rel="alternate" type="text/html" href="http://{{config.host}}{{config.url_prefix}}{{post.path}}" />
-        <id>tag:{{config.host}},2009:post:{{post.key.id}}</id>
+        <id>tag:{{config.host}},{{post.updated|date:"Y-m-d"}}:post:{{post.key.id}}</id>
         <updated>{{post.updated|date:"Y-m-d\TH:i:s\Z"}}</updated>
         <published>{{post.published|date:"Y-m-d\TH:i:s\Z"}}</published>
         <author>
