@@ -88,3 +88,13 @@ def _regenerate_sitemap():
   s.seek(0)
   renderedgz = s.read()
   static.set('/sitemap.xml.gz',renderedgz, 'application/x-gzip', False)
+  if config.google_sitemap_ping:
+      ping_googlesitemap()     
+
+def ping_googlesitemap():
+  import urllib
+  from google.appengine.api import urlfetch
+  google_url = 'http://www.google.com/webmasters/tools/ping?sitemap=http://' + config.host + '/sitemap.xml.gz'
+  response = urlfetch.fetch(google_url, '', urlfetch.GET)
+  if response.status_code / 100 != 2:
+    raise Warning("Google Sitemap ping failed", response.status_code, response.content)
