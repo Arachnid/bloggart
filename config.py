@@ -76,3 +76,7 @@ highlighting_style = 'friendly'
 # Absolute url of the blog application use '/blog' for host/blog/ 
 # and '' for host/.Also remember to change app.yaml accordingly 
 url_prefix = ''
+
+# Defines where the user is defined in the rel="me" of your pages.
+# This allows you to expand on your social graph.
+rel_me = None

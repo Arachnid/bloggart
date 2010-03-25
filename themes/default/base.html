@@ -10,6 +10,9 @@
   {% endif %}
   <link rel="alternate" type="application/atom+xml" href="{{config.url_prefix}}/feeds/atom.xml" />
   <link rel="SHORTCUT ICON" href="{{config.url_prefix}}/static/{{config.theme}}/favicon.ico"/>
+  {% if config.rel_me %}
+  <link rel="me" href="{{config.rel_me}}" />
+  {% endif %}
   {% block head %}{% endblock %}
 </head>
 <body>
