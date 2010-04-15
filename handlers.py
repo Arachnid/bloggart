@@ -114,6 +114,18 @@ class DeleteHandler(BaseHandler):
       post.delete()
     self.render_to_response("deleted.html", None)
 
+
+class PreviewHandler(BaseHandler):
+  @with_post
+  def get(self, post):
+    # Temporary set a published date iff it's still
+    # datetime.max. Django's date filter has a problem with
+    # datetime.max and a "real" date looks better.
+    if post.published == datetime.datetime.max:
+      post.published = datetime.datetime.now()
+    self.response.out.write(utils.render_template('post.html',
+                                                  {'post': post}))
+
 class RegenerateHandler(BaseHandler):
   def post(self):
     regen = post_deploy.PostRegenerator()
