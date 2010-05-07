@@ -18,6 +18,12 @@
   {% if config.rel_me %}
   <link rel="me" href="{{config.rel_me}}" />
   {% endif %}
+
+  {% if config.google_friends_id %}
+  <!-- Include the Google Friend Connect javascript library. -->
+  <script type="text/javascript" src="http://www.google.com/friendconnect/script/friendconnect.js"></script>
+  {% endif %}
+
   {% block head %}{% endblock %}
 </head>
 <body>
@@ -58,6 +64,39 @@
           </ul>
         </div>
       {% endfor %}
+
+     {% if config.google_friends_id and config.google_friends_members %}
+        <div class="sidemenu">
+          <h3>Members</h3>
+          <!-- Define the div tag where the gadget will be inserted. -->
+          <div id="div-1279810020886984279" style=""></div>
+          <!-- Render the gadget into a div. -->
+          <script type="text/javascript">
+            var skin = {};
+            skin['BORDER_COLOR'] = '#cccccc';
+            skin['ENDCAP_BG_COLOR'] = '#fff';
+            skin['ENDCAP_TEXT_COLOR'] = '#444';
+            skin['ENDCAP_LINK_COLOR'] = '#0000cc';
+            skin['ALTERNATE_BG_COLOR'] = '#ffffff';
+            skin['CONTENT_BG_COLOR'] = '#ffffff';
+            skin['CONTENT_LINK_COLOR'] = '#000';
+            skin['CONTENT_TEXT_COLOR'] = '#666';
+            skin['CONTENT_SECONDARY_LINK_COLOR'] = '#7777cc';
+            skin['CONTENT_SECONDARY_TEXT_COLOR'] = '#666666';
+            skin['CONTENT_HEADLINE_COLOR'] = '#666';
+            skin['NUMBER_ROWS'] = '4';
+            google.friendconnect.container.setParentUrl('/' /* location of rpc_relay.html and canvas.html */);
+            google.friendconnect.container.renderMembersGadget(
+            { id: 'div-1279810020886984279',
+            site: '{{ config.google_friends_id }}'
+            }, skin);
+          </script>
+        </div>
+      {% endif %}
+
+
+
+
 		</div>		
 	</div></div>
 	<div id="footer-wrapper" class="container_16">
