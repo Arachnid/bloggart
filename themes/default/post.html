@@ -13,7 +13,7 @@
     </p>
   {{post.rendered}}
   <p class="postmeta">
-    <span class="date">{{post.published|date:"d F, Y"}}</span>
+    <span class="date">{{post.published|date:config.date_format}}</span>
   </p>
   {% if prev %}
     <a id="prev" href="{{config.url_prefix}}{{prev.path}}">Previous Post</a>

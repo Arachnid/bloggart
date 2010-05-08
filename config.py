@@ -90,3 +90,7 @@ feed_proxy = None
 google_friends_id = None
 google_friends_comments = True # For comments.
 google_friends_members  = True # For a members container.
+
+# To format the date of your post.
+# http://docs.djangoproject.com/en/1.1/ref/templates/builtins/#now
+date_format = "d F, Y"
