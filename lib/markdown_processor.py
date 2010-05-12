@@ -36,6 +36,7 @@
 
 # Set to True if you want inline CSS styles instead of classes
 INLINESTYLES = False
+LINEENDING = '<br />'
 
 
 import re
@@ -52,7 +53,7 @@ class CodeBlockPreprocessor(TextPreprocessor):
     pattern = re.compile(
         r'\[sourcecode:(.+?)\](.+?)\[/sourcecode\]', re.S)
 
-    formatter = HtmlFormatter(noclasses=INLINESTYLES)
+    formatter = HtmlFormatter(noclasses=INLINESTYLES, lineseparator=LINEENDING)
 
     def run(self, lines):
         def repl(m):
@@ -61,7 +62,6 @@ class CodeBlockPreprocessor(TextPreprocessor):
             except ValueError:
                 lexer = TextLexer()
             code = highlight(m.group(2), lexer, self.formatter)
-            code = code.replace('\n\n', '\n&nbsp;\n').replace('\n', '<br />')
             return '\n\n<div class="code">%s</div>\n\n' % code
         return self.pattern.sub(
             repl, lines)
