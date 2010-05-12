@@ -62,6 +62,8 @@ class CodeBlockPreprocessor(TextPreprocessor):
             except ValueError:
                 lexer = TextLexer()
             code = highlight(m.group(2), lexer, self.formatter)
+            i = code.rfind("%s</pre></div>" % LINEENDING)
+            code = code[:i] + code[i+len(LINEENDING):]
             return "\n\n%s\n\n" % code.strip()
         return self.pattern.sub(
             repl, lines)
