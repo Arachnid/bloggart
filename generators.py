@@ -193,8 +193,8 @@ class ListingContentGenerator(ContentGenerator):
                  config.html_mime_type)
 
     if more_posts:
-      deferred.defer(cls.generate_resource, None, resource, pagenum + 1,
-                     posts[-2].published)
+        deferred.defer(cls.generate_resource, None, resource, pagenum + 1,
+                       posts[-2].published)
 
 
 class IndexContentGenerator(ListingContentGenerator):
