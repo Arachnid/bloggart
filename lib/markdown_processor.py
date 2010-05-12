@@ -62,6 +62,6 @@ class CodeBlockPreprocessor(TextPreprocessor):
             except ValueError:
                 lexer = TextLexer()
             code = highlight(m.group(2), lexer, self.formatter)
-            return '\n\n<div class="code">%s</div>\n\n' % code
+            return '\n\n%s\n\n' % code
         return self.pattern.sub(
             repl, lines)
