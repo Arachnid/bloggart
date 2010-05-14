@@ -223,6 +223,73 @@ class TagsContentGenerator(ListingContentGenerator):
 generator_list.append(TagsContentGenerator)
 
 
+class ArchivePageContentGenerator(ListingContentGenerator):
+  """
+  ContentGenerator for archive pages (a list of posts in a certain
+  year-month).
+  """
+
+  path = '/archive/%(resource)s/%(pagenum)d'
+  first_page_path = '/archive/%(resource)s/'
+
+  @classmethod
+  def get_resource_list(cls, post):
+    from models import BlogDate
+    return [BlogDate.get_key_name(post)]
+
+  @classmethod
+  def _filter_query(cls, resource, q):
+    from models import BlogDate
+    ts = BlogDate.datetime_from_key_name(resource)
+
+    # We don't have to bother clearing hour, min, etc., as
+    # datetime_from_key_name() only sets the year and month.
+    min_ts = ts.replace(day=1)
+
+    # Make the next month the upperbound.
+    # Python doesn't wrap the month for us, so handle it manually.
+    if min_ts.month >= 12:
+      max_ts = min_ts.replace(year=min_ts.year+1, month=1)
+    else:
+      max_ts = min_ts.replace(month=min_ts.month+1)
+
+    q.filter('published >=', min_ts)
+    q.filter('published <', max_ts)
+generator_list.append(ArchivePageContentGenerator)
+
+
+class ArchiveIndexContentGenerator(ContentGenerator):
+  """
+  ContentGenerator for archive index (a list of year-month pairs).
+  """
+
+  @classmethod
+  def get_resource_list(cls, post):
+    return ["archive"]
+
+  @classmethod
+  def get_etag(cls, post):
+    return post.hash
+
+  @classmethod
+  def generate_resource(cls, post, resource):
+    from models import BlogDate
+
+    q = BlogDate.all().order('-__key__')
+    dates = [x.date for x in q]
+    date_struct = {}
+    for date in dates:
+      date_struct.setdefault(date.year, []).append(date)
+
+    str = utils.render_template("archive.html", {
+      'generator_class': cls.__name__,
+      'dates': dates,
+      'date_struct': date_struct.values(),
+    })
+    static.set('/archive/', str, config.html_mime_type)
+generator_list.append(ArchiveIndexContentGenerator)
+
+
 class AtomContentGenerator(ContentGenerator):
   """ContentGenerator for Atom feeds."""
 
