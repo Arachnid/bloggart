@@ -33,6 +33,7 @@
 		<div  id="nav">
 			<ul>
 				<li{% ifequal generator_class "IndexContentGenerator" %} id="current"{% endifequal %}><a href="{{config.url_prefix}}/">Home</a></li>
+				<li{% ifequal generator_class "ArchiveIndexContentGenerator" %} id="current"{% else %}{% ifequal generator_class "ArchivePageContentGenerator" %} id="current"{% endifequal %}{% endifequal %}><a href="{{config.url_prefix}}/archive/">Archive</a></li>
         {% block menu %}{% endblock %}
 			</ul>
 		</div>		
