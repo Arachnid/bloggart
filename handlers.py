@@ -61,6 +61,7 @@ class AdminHandler(BaseHandler):
     count = int(self.request.get('count', 20))
     posts = models.BlogPost.all().order('-published').fetch(count, offset)
     template_vals = {
+        'is_admin': True,
         'offset': offset,
         'count': count,
         'last_post': offset + len(posts) - 1,
