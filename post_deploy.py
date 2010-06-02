@@ -80,8 +80,13 @@ def run_deploy_task():
     pass
 
 
-def try_post_deploy():
-  """Runs post_deploy() iff it has not been run for this version yet."""
+def try_post_deploy(force=False):
+  """
+  Runs post_deploy() if it has not been run for this version yet.
+
+  If force is True, run post_deploy() anyway, but don't create a new
+  VersionInfo entity.
+  """
   version_info = models.VersionInfo.get_by_key_name(
       os.environ['CURRENT_VERSION_ID'])
   if not version_info:
@@ -108,11 +113,18 @@ def try_post_deploy():
   elif force: # also implies version_info is available
     post_deploy(version_info, is_new=False)
 
+def post_deploy(previous_version, is_new=True):
+  """
+  Carries out post-deploy functions, such as rendering static pages.
 
-def post_deploy(previous_version):
-  """Carries out post-deploy functions, such as rendering static pages."""
+  If is_new is true, a new VersionInfo entity will be created.
+  """
   for task in post_deploy_tasks:
     task(previous_version)
+
+  # don't proceed to create a VersionInfo entity
+  if not is_new:
+    return
 
   new_version = models.VersionInfo(
       key_name=os.environ['CURRENT_VERSION_ID'],

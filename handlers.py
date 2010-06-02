@@ -131,5 +131,5 @@ class RegenerateHandler(BaseHandler):
   def post(self):
     regen = post_deploy.PostRegenerator()
     deferred.defer(regen.regenerate)
-    deferred.defer(post_deploy.post_deploy, post_deploy.BLOGGART_VERSION)
+    deferred.defer(post_deploy.try_post_deploy, force=True)
     self.render_to_response("regenerating.html")
