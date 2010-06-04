@@ -89,7 +89,7 @@ def _regenerate_sitemap():
   renderedgz = s.read()
   static.set('/sitemap.xml.gz',renderedgz, 'application/x-gzip', False)
   if config.google_sitemap_ping:
-      ping_googlesitemap()     
+      ping_googlesitemap()
 
 def ping_googlesitemap():
   import urllib
