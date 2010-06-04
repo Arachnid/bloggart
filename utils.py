@@ -31,11 +31,12 @@ def format_post_path(post, num):
   slug = slugify(post.title)
   if num > 0:
     slug += "-" + str(num)
+  date = post.published_tz
   return config.post_path_format % {
       'slug': slug,
-      'year': post.published.year,
-      'month': post.published.month,
-      'day': post.published.day,
+      'year': date.year,
+      'month': date.month,
+      'day': date.day,
   }
 
 
@@ -98,3 +99,42 @@ def ping_googlesitemap():
   response = urlfetch.fetch(google_url, '', urlfetch.GET)
   if response.status_code / 100 != 2:
     raise Warning("Google Sitemap ping failed", response.status_code, response.content)
+
+def tzinfo():
+  """
+  Returns an instance of a tzinfo implementation, as specified in
+  config.tzinfo_class; else, None.
+  """
+
+  if not config.tzinfo_class:
+    return None
+
+  str = config.tzinfo_class
+  i = str.rfind(".")
+
+  try:
+    # from str[:i] import str[i+1:]
+    klass_str = str[i+1:]
+    mod = __import__(str[:i], globals(), locals(), [klass_str])
+    klass = getattr(mod, klass_str)
+    return klass()
+  except ImportError:
+    return None
+
+def tz_field(property):
+  """
+  For a DateTime property, make it timezone-aware if possible.
+
+  If it already is timezone-aware, don't do anything.
+  """
+  if property.tzinfo:
+    return property
+
+  tz = tzinfo()
+  if tz:
+    # delay importing, hopefully after fix_path is done
+    from timezones.utc import UTC
+
+    return property.replace(tzinfo=UTC()).astimezone(tz)
+  else:
+    return property

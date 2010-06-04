@@ -53,6 +53,14 @@ class BlogPost(db.Model):
   updated = db.DateTimeProperty(auto_now=False)
   deps = aetycoon.PickleProperty()
 
+  @property
+  def published_tz(self):
+    return utils.tz_field(self.published)
+
+  @property
+  def updated_tz(self):
+    return utils.tz_field(self.updated)
+
   @aetycoon.TransformProperty(tags)
   def normalized_tags(tags):
     return list(set(utils.slugify(x.lower()) for x in tags))
