@@ -56,7 +56,7 @@ class BlogPost(db.Model):
   def summary_hash(self):
     val = (self.title, self.summary, self.tags, self.published)
     return hashlib.sha1(str(val)).hexdigest()
-  
+
   def publish(self):
     regenerate = False
     if not self.path:
@@ -70,7 +70,7 @@ class BlogPost(db.Model):
       self.put()
       # Force regenerate on new publish. Also helps with generation of
       # chronologically previous and next page.
-      regenerate = True 
+      regenerate = True
     if not self.deps:
       self.deps = {}
     for generator_class, deps in self.get_deps(regenerate=regenerate):
@@ -82,7 +82,7 @@ class BlogPost(db.Model):
     self.put()
 
   def remove(self):
-    if not self.is_saved():   
+    if not self.is_saved():
       return
     if not self.deps:
       self.deps = {}
@@ -98,8 +98,8 @@ class BlogPost(db.Model):
             generator_class.generate_resource(self, dep, action='delete')
             self.delete()
           else:
-            generator_class.generate_resource(self, dep)  
-  
+            generator_class.generate_resource(self, dep)
+
   def get_deps(self, regenerate=False):
     for generator_class in generators.generator_list:
       new_deps = set(generator_class.get_resource_list(self))
