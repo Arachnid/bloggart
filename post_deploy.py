@@ -89,7 +89,24 @@ def try_post_deploy():
     q.order('-bloggart_major')
     q.order('-bloggart_minor')
     q.order('-bloggart_rev')
-    post_deploy(q.get())
+
+    version_info = q.get()
+
+    # This might be an initial deployment; create the first VersionInfo
+    # entity.
+    if not version_info:
+      version_info = models.VersionInfo(
+        key_name=os.environ['CURRENT_VERSION_ID'],
+        bloggart_major = BLOGGART_VERSION[0],
+        bloggart_minor = BLOGGART_VERSION[1],
+        bloggart_rev = BLOGGART_VERSION[2])
+      version_info.put()
+
+      post_deploy(version_info, is_new=False)
+    else:
+      post_deploy(version_info)
+  elif force: # also implies version_info is available
+    post_deploy(version_info, is_new=False)
 
 
 def post_deploy(previous_version):
