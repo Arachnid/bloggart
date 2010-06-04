@@ -13,7 +13,7 @@
     </p>
   {{post.rendered}}
   <p class="postmeta">
-    <span class="date">{{post.published|date:config.date_format}}</span>
+    <span class="date">{{post.published_tz|date:config.date_format}}</span>
   </p>
   {% if prev %}
     <a id="prev" href="{{config.url_prefix}}{{prev.path}}">Previous Post</a>
@@ -21,7 +21,7 @@
   {% if next %}
     <a id="next" href="{{config.url_prefix}}{{next.path}}">Next Post</a>
   {% endif %}
-  
+
   {% if config.disqus_forum %}
     <h3 id="comments">Comments</h3>
     <div id="disqus_thread"></div>
@@ -34,7 +34,7 @@
     <noscript><a href="http://disqus.com/forums/{{config.disqus_forum}}/?url=ref">View the discussion thread.</a></noscript>
     <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
   {% endif %}
-    
+
   {% if config.google_friends_id and config.google_friends_comments %}
     <!-- Define the div tag where the gadget will be inserted. -->
     <div id="div-2753931352309273209" style=""></div>

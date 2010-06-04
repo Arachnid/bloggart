@@ -18,7 +18,7 @@
       {% if config.disqus_forum %}
         <a href="{{config.url_prefix}}{{post.path}}#disqus_thread" class="readmore">Comments</a> |
       {% endif %}
-      <span class="date">{{post.published|date:config.date_format}}</span>
+      <span class="date">{{post.published_tz|date:config.date_format}}</span>
     </p>
   {% endfor %}
   {% if prev_page %}
