@@ -187,10 +187,8 @@ class ListingContentGenerator(ContentGenerator):
     rendered = utils.render_template("listing.html", template_vals)
 
     path_args['pagenum'] = pagenum
-    static.set(cls.path % path_args, rendered, config.html_mime_type)
-    if pagenum == 1:
-      static.set(cls.first_page_path % path_args, rendered,
-                 config.html_mime_type)
+    path = cls.first_page_path if pagenum == 1 else cls.path
+    static.set(path % path_args, rendered, config.html_mime_type)
 
     if more_posts:
         deferred.defer(cls.generate_resource, None, resource, pagenum + 1,
