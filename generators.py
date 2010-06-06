@@ -174,8 +174,10 @@ class ListingContentGenerator(ContentGenerator):
     path_args = {
         'resource': resource,
     }
+    _get_path = lambda: \
+                  cls.first_page_path if path_args['pagenum'] == 1 else cls.path
     path_args['pagenum'] = pagenum - 1
-    prev_page = cls.path % path_args
+    prev_page = _get_path() % path_args
     path_args['pagenum'] = pagenum + 1
     next_page = cls.path % path_args
     template_vals = {
@@ -187,9 +189,7 @@ class ListingContentGenerator(ContentGenerator):
     rendered = utils.render_template("listing.html", template_vals)
 
     path_args['pagenum'] = pagenum
-    path = cls.first_page_path if pagenum == 1 else cls.path
-    static.set(path % path_args, rendered, config.html_mime_type)
-
+    static.set(_get_path() % path_args, rendered, config.html_mime_type)
     if more_posts:
         deferred.defer(cls.generate_resource, None, resource, pagenum + 1,
                        posts[-2].published)
