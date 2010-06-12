@@ -49,6 +49,7 @@ class BaseHandler(webapp.RequestHandler):
     template_vals.update({
         'path': self.request.path,
         'handler_class': self.__class__.__name__,
+        'is_admin': True,
     })
     template_name = os.path.join("admin", template_name)
     self.response.out.write(utils.render_template(template_name, template_vals,
@@ -61,7 +62,6 @@ class AdminHandler(BaseHandler):
     count = int(self.request.get('count', 20))
     posts = models.BlogPost.all().order('-published').fetch(count, offset)
     template_vals = {
-        'is_admin': True,
         'offset': offset,
         'count': count,
         'last_post': offset + len(posts) - 1,
