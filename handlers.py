@@ -124,8 +124,9 @@ class PreviewHandler(BaseHandler):
     # datetime.max and a "real" date looks better.
     if post.published == datetime.datetime.max:
       post.published = datetime.datetime.now()
-    self.response.out.write(utils.render_template('post.html',
-                                                  {'post': post}))
+    self.response.out.write(utils.render_template('post.html', {
+        'post': post,
+        'is_admin': True}))
 
 class RegenerateHandler(BaseHandler):
   def post(self):
