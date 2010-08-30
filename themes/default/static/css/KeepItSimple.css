@@ -11,7 +11,7 @@
    HTML ELEMENTS
 ------------------------------------------------- */ 
 body {
-	font: 12px/165% 'Lucida Grande', Verdana, Helvetica, sans-serif;
+	font: 12px/165% "Lucida Grande", "Verdana", "Helvetica", sans-serif;
 	color: #666666; 	
 	margin: 0; padding: 0 0 50px 0; 
 	background: #F6F5F5 url(../images/bg.gif) repeat-x; 
@@ -35,14 +35,16 @@ a:hover.more-link {
 }
 /* Headers */
 h1, h2, h3, h4 {
-	font: bold 1em/1.5em Georgia, 'Times New Roman', Times, serif;
+	font: bold 1em/1.5em "Georgia", "Times New Roman", "Times", serif;
 	color: #444;
 	padding: 10px 15px 7px 15px;	 
 }
-h1 { font-size: 3.7em; font-weight: normal; letter-spacing: -2px; }
+h1 { font-size: 3.0em; font-weight: normal; letter-spacing: -2px; }
 h2 { font-size: 2.8em; font-weight: normal; color: #663333; }
 h3 { font-size: 2em; font-weight: normal; letter-spacing: -0.5px; padding-top: 15px}
 h4 { font-size: 1.3em; }
+
+strong { font-weight: bold; }
 
 /* Lists */
 ul, ol {
@@ -81,7 +83,7 @@ code, pre {
   	text-align: left;
   	display: block;
   	overflow: auto;  
-  	font: 500 1em/1.5em 'Lucida Console', 'Courier New', Monospace ;
+  	font: 500 1em/1.5em "Lucida Console", "Courier New", "Monospace";
   	white-space: pre;
   	border: 1px solid #F0F0F0;
 	background: #f8f8f8;  
@@ -99,7 +101,7 @@ blockquote {
 	font-size: 17px;
 	line-height: 1.5em;
 	font-style: italic;
-	font-family: Georgia, 'Times New Roman', Times, Serif;	
+	font-family: "Georgia", "Times New Roman", "Times", Serif;	
 	color: #555;	
 }
 
@@ -150,7 +152,7 @@ input, select, textarea {
 	border-width: 1px;
 	border-style: solid;
   	border-color: #d4d4d4 #ebebeb #ebebeb #d4d4d4; 	
-	font: 11px 'Lucida Grande', Verdana, Helvetica, sans-serif;
+	font: 11px "Lucida Grande", "Verdana", "Helvetica", sans-serif;
 }
 input:focus, select:focus, textarea:focus {
 	color: #7BA857;
@@ -198,13 +200,13 @@ input.button {
 	position: relative;
 	margin: 0 auto;
 	background: url(../images/border.gif) repeat-x left bottom; 	
-	height: 275px;	
+	height: 302px;	
 }
 #header h1#logo-text { margin: 0; padding: 0; }
 #header h1#logo-text a {
 	position: absolute; 
 	margin: 0; padding: 0 5px 0 0;
-	font: normal 75px Georgia, 'Times New Roman', Times, serif;
+	font: normal 70px Georgia, 'Times New Roman', Times, serif;
 	letter-spacing: -6px;
 	color: #93b876;
 	text-decoration: none;
@@ -218,7 +220,7 @@ input.button {
 	margin: 0; padding: 0;
 	font-family: Georgia, 'Times New Roman', Times, Serif;
 	font-weight: normal;
-	font-size: 17px;
+	font-size: 16px;
 	line-height: 1.6em;
 	font-style: italic;
 	letter-spacing: -.5px;
@@ -230,9 +232,9 @@ input.button {
 }
 #header #header-image {
 	position: absolute;
-	background: url(../images/header-bloggart-watermark.png) no-repeat;
-	width: 371px;
-	height: 263px;	
+	background: url(../images/header-bloggart-watermark.png) top right no-repeat;
+	width: 400px;
+	height: 300px;	
 	right: 10px; top: 0;	
 }
 
