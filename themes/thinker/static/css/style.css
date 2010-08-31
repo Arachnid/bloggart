@@ -1,0 +1,454 @@
+/*
+Theme Name: Thinker
+Description: HTML5 theme based off of Paul Irish's Boiler Plate http://html5boilerplate.com/.
+Author: John Turner
+Author URI: http://johndturner.com
+Version: 0.1
+
+
+*/
+
+/*-------------------------------------------------------------------------------------------
+
+INDEX:
+0. RESETS
+-0.1 reset
+-0.2 fonts
+
+1. SETUP
+-1.1 Defaults
+-1.2 Hyperlinks
+
+2. SITE STRUCTURE & APPEARANCE
+-2.1 Layout
+-2.2 Navigation
+-2.2.1 Drop-down menus
+-2.3 Header
+-2.4 Content
+-2.5 Sidebar
+-2.6 Footer
+
+3. POSTS
+-3.1 Post
+-3.2 Images
+-3.3 Pagination
+
+4. WIDGETS
+-4.1 Homepage widgets
+-4.2 Generic sidebar Widgets
+-4.3 Specific Widgets
+
+5. COMMENTS
+-5.1 Comments
+-5.2 Pingbacks / Trackbacks
+-5.3 Comments Form
+
+6. MISC
+-6.1 Buttons
+-6.2 Info Boxes
+-6.3 Screen Readers
+-6.4 Conatct Form 
+-6.5 SyntaxHighlighter
+
+7. ADMIN
+-7.1 Datatable
+
+8. MOBILE
+-8.1 Layout
+
+9. PRINT
+-9.1 Layout
+
+FONT TABLE
+10	 77
+11	 85
+12	 93
+13	 100
+14	 108
+15	 116
+16	 123.1
+17	 131
+18	 138.5
+19	 146.5
+20	 153.9
+21	 161.6
+22	 167
+23	 174
+24	 182
+25	 189
+26	 197
+
+-------------------------------------------------------------------------------------------*/
+
+/*-------------------------------------------------------------------------------------------*/
+/* 1. RESETS */
+/*-------------------------------------------------------------------------------------------*/
+/* Use YUI http://yui.yahooapis.com/combo?2.8.1/build/reset-fonts/reset-fonts.css&2.8.1/build/base/base-min.css */
+
+/* 0.1 html5 */
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, figure, footer, header, 
+hgroup, menu, nav, section, menu,
+time, mark, audio, video {
+  margin:0;
+  padding:0;
+  border:0;
+  outline:0;
+  font-size:100%;
+  vertical-align:baseline;
+  background:transparent;
+}                  
+article, aside, figure, footer, header, 
+hgroup, nav, section { display:block; }
+nav ul { list-style:none; }
+blockquote, q { quotes:none; }
+blockquote:before, blockquote:after,
+q:before, q:after { content:''; content:none; }
+a { margin:0; padding:0; font-size:100%; vertical-align:baseline; background:transparent; }
+ins { background-color:#ff9; color:#000; text-decoration:none; }
+mark { background-color:#ff9; color:#000; font-style:italic; font-weight:bold; }
+del { text-decoration: line-through; }
+abbr[title], dfn[title] { border-bottom:1px dotted #000; cursor:help; }
+/* tables still need cellspacing="0" in the markup */
+table { border-collapse:collapse; border-spacing:0; }
+hr { display:block; height:1px; border:0; border-top:1px solid #ccc; margin:1em 0; padding:0; }
+input, select { vertical-align:middle; }
+
+/* 0.1 fonts */
+body {font:13px/1.231 "Helvetica Neue", Helvetica, Arial, sans-serif;};
+    *font-size:small; /* for IE */
+	*font:x-small; /* for IE in quirks mode */
+	line-height:1.22;
+}
+select,input,button,textarea {font:99% arial,helvetica,clean,sans-serif;}
+table {font-size:inherit;font:100%;}
+pre,code,kbd,samp,tt {font-family:monospace;*font-size:108%;line-height:100%;}
+
+/*-------------------------------------------------------------------------------------------*/
+/* 1. SETUP */
+/*-------------------------------------------------------------------------------------------*/
+
+/* 1.1 Defaults */
+html { -webkit-font-smoothing: antialiased; }
+body{background:#fff;}
+body, select, input, textarea { color:#444; }
+h1,h2,h3,h4,h5,h6 { text-rendering: optimizeLegibility; }
+h1,h2,h3{font-family: 'Cardo', arial, serif;}
+h1{font-size:197%;}
+h2{font-size:167%;}
+h3{font-size:108%;}
+h1,h2,h3{margin:0 0 1em 0;}
+h1,h2,h3,h4,h5,h6,strong{font-weight:bold;}
+abbr,acronym{border-bottom:1px dotted #000;cursor:help;}
+em{font-style:italic;}
+blockquote,ul,ol,dl{margin:1em;}
+ol,ul,dl{margin-left:2em;}
+ol li{list-style:decimal outside;}
+ul li{list-style:disc outside;}
+dl dd{margin-left:1em;}
+small { font-size:85%; }
+th { font-weight: bold; }
+td, td img { vertical-align:top; } 
+sub { vertical-align: sub; font-size: smaller; }
+sup { vertical-align: super; font-size: smaller; }
+/*th,td{border:1px solid #000;padding:.5em;}
+th{font-weight:bold;text-align:center;}caption{margin-bottom:.5em;text-align:center;}
+p,fieldset,table{margin-bottom:1em;}*/
+p,fieldset{margin-bottom:1em;}
+input, textarea {}
+/* align checkboxes, radios, text inputs with their label
+   by: Thierry Koblentz tjkdesign.com/ez-css/css/base.css  */
+input[type="radio"] { vertical-align: text-bottom; }
+input[type="checkbox"] { vertical-align: bottom; *vertical-align: baseline; }
+.ie6 input { vertical-align: text-bottom; }
+/* hand cursor on clickable input elements */
+label, input[type=button], input[type=submit], button { cursor: pointer; }
+/* These selection declarations have to be separate.No text-shadow: twitter.com/miketaylr/status/12228805301 Also: hot pink. */
+::-moz-selection{ background: #FF5E99; color:#fff; text-shadow: none; }
+::selection { background:#FF5E99; color:#fff; text-shadow: none; }
+/* always force a scrollbar in non-IE */
+html { overflow-y: scroll; }
+/* make buttons play nice in IE: www.viget.com/inspire/styling-the-button-element-in-internet-explorer/ */
+button {  width: auto; overflow: visible; }
+/* bicubic resizing for non-native sized IMG: code.flickr.com/blog/2008/11/12/on-ui-quality-the-little-things-client-side-image-resizing/ */
+.ie7 img { -ms-interpolation-mode: bicubic; }
+
+/*  Non-semantic helper classes */
+/* for image replacement */
+.ir { display:block; text-indent:-999em; overflow:hidden; background-repeat: no-repeat; }
+/* Hide for both screenreaders and browserscss-discuss.incutio.com/wiki/Screenreader_Visibility */
+.hidden { display:none; visibility:hidden; } 
+/* Hide only visually, but have it available for screenreaders www.webaim.org/techniques/css/invisiblecontent/ Solution from: j.mp/visuallyhidden - Thanks Jonathan Neal! */
+.visuallyhidden { position:absolute !important;    
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px); }
+/* Hide visually and from screenreaders, but maintain layout */
+.invisible { visibility: hidden; }
+/* >> The Magnificent CLEARFIX << j.mp/phayesclearfix */
+.clearfix:after  { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+.clearfix { zoom: 1; }
+
+/* 1.2 Hyperlinks */
+a, a:visited,a:active  { color: #444; text-decoration:none; }
+#site-title a,#site-title a:visited,a:active{color: #444;}
+.entry-content a,.entry-content a:visited,a:active  { color: #3cb4cd; }
+.entry-summary a,.entry-summary a:visited,a:active  { color: #3cb4cd; }
+a:hover { text-decoration:underline; }
+/* Accessible focus treatment: people.opera.com/patrickl/experiments/keyboard/test */
+a:hover, a:active { outline: none; }
+/*  j.mp/webkit-tap-highlight-color */
+a:link { -webkit-tap-highlight-color: #FF5E99; }
+
+
+h1 a, h1 a:visited, h2 a, h2 a:visited, h3 a, h3 a:visited,
+h4 a, h4 a:visited, h5 a, h5 a:visited, h6 a, h6 a:visited  { text-decoration: none; }
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-decoration: underline;}
+
+/*-------------------------------------------------------------------------------------------*/
+/* 2. SITE STRUCTURE & APPEARANCE */
+/*-------------------------------------------------------------------------------------------*/
+
+/* 2.1 Layout */
+#wrapper{width:960px;margin:0 auto;font-size:108%;line-height:1.6em;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;padding:0 20px}
+#primary{float: right;margin: 0 0 0 -250px;width: 100%;}
+#content {margin: 0 0 0 250px;}
+#secondary {float: left;overflow: hidden;width: 200px;}
+#colophon {clear: both;width: 100%;}
+
+/* 2.2 Navigation */
+#access{display:none;}
+
+/* 2.2.1 Drop-down menus */
+
+/* 2.3 Header */
+#branding{padding:0 0 0 250px;}
+#site-title{font-size:300%;margin:1em 0 0;}
+#site-description{font:italic 108% Georgia,serif;color:#666;margin:0 0 40px 165px;}
+
+/* 2.4 Content */
+#content{padding:0 0 40px;}
+
+/* 2.5 Sidebar */
+#sidebar{overflow:hidden;margin:80px 0 0;}
+
+/* 2.6 Footer */
+#site-generator {position: absolute;left: -9000em;}
+
+/*-------------------------------------------------------------------------------------------*/
+/* 3. POSTS */
+/*-------------------------------------------------------------------------------------------*/
+
+/* 3.1 Post */
+.post{margin: 0px 0px 4em;}
+.entry-meta {margin:1em 0;color:#999;}
+.entry-meta,.readmore{font-size:85%;}
+.entry-meta a time{display:inline;}
+.share{margin:20px 0;}
+#tweet-btn{display:inline;}
+.page .entry-meta, .page #comments{display:none;}
+.listing .page{display:none;}
+blockquote{background:url('../images/quote.png') no-repeat left top;padding:0 0 0 35px;}
+
+/* 3.2 Images */
+.thumbnail {max-width:150px;}
+.tag-links{background:url('../images/ico-tag.png') no-repeat right;padding:0 15px 0 0;margin:0 7px 0 0;}
+.comments-link{background:url('../images/ico-comments.png') no-repeat right;padding:7px 25px 0 0;margin:0 7px 0 0;}
+
+/* 3.3 Pagination */
+
+/*-------------------------------------------------------------------------------------------*/
+/* 4. WIDGETS */
+/*-------------------------------------------------------------------------------------------*/
+
+/* 4.1 Homepage Widgets */
+
+/* 4.2 Generic Sidebar Widgets */
+.widget-area ul{margin:0 0 25px 0;}
+.widget-container, .widget-container ul li{list-style-type:none;}
+.widget-title {display:none;}
+
+/* 4.3 Specific Widgets */
+/* NAVIGATION */
+#widget-navigation{text-align:right;}
+
+/* SEARCH */
+#search label{display:none;}
+#quick-search p{border:1px solid #f2f2f2;}
+.tbox{width:83%;font-size:114%;height:25px;border:none;}
+.btn{float:right;margin:5px 4px 0;}
+
+/* REALTIME */
+#widget-realtime{font-size:77%;}
+#widget-realtime{margin:20px 0 0;}
+#widget-realtime li{margin:0 0 5px 0;}
+.update-posterous{background:url('../images/posterous_16.png') no-repeat left 3px;padding:0 0 0 20px;}
+.update-reader{background:url('../images/reader_16.png') no-repeat left 3px;padding:0 0 0 20px;}
+.update-delicious{background:url('../images/delicious_16.png') no-repeat left 3px;padding:0 0 0 20px;}
+
+/*-------------------------------------------------------------------------------------------*/
+/* 5. COMMENTS */
+/*-------------------------------------------------------------------------------------------*/
+
+/* 5.1 Comments */
+
+/* 5.2 Comments Form */
+
+/* 5.3 Pingbacks / Trackbacks */
+
+/*-------------------------------------------------------------------------------------------*/
+/* 6. MISC */
+/*-------------------------------------------------------------------------------------------*/
+
+/* 6.1 Buttons */
+input[type="button"],input[type="submit"] {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f5f5f5), to(#999));
+  background-image: -moz-linear-gradient(top, #f5f5f5, #999);
+  border: 1px solid #999;
+  margin: 5px;
+  padding: 5px;
+  color: #333;
+}
+/* 6.2 Info Boxes */
+
+/* 6.3 Screen Readers */
+.screen-reader-text {position: absolute;left: -9000em;}
+
+/* 6.4 Contact Form */
+
+/* 6.4 SyntaxHighlighter */
+.syntaxhighlighter {
+  padding: 10px 0px;
+}
+
+/*-------------------------------------------------------------------------------------------*/
+/* 6. ADMIN */
+/*-------------------------------------------------------------------------------------------*/
+
+/* 6.1 General */
+.admin #access {width:500px;display:block;position:fixed; top:20px;left: 50%;margin-left: -250px;
+     -moz-border-radius: 10px; /* FF1+ */
+  -webkit-border-radius: 10px; /* Saf3+, Chrome */
+          border-radius: 10px; /* Opera 10.5, IE 9 */
+          background-color: #000;
+          background-color: rgba(0, 0, 0, 0.9);  /* FF3+, Saf3+, Opera 10.10+, Chrome */
+          color:#fff;
+         -moz-box-shadow: 0px 0px 10px #333; /* FF3.5+ */
+      -webkit-box-shadow: 0px 0px 10px #333; /* Saf3.0+, Chrome */
+              box-shadow: 0px 0px 10px #333; /* Opera 10.5, IE 9.0 */
+              z-index:999;
+          
+  }
+.admin #access ul li{display: inline;list-style-type: none;padding:0 20px 0 0;}
+
+.admin #access ul li a{color:#fff;}
+
+/* 6.2 Datatable */
+/* Use jQueryUI */
+#edit-post{
+    width:100%;
+}
+
+.dataTables_wrapper{
+   margin:20px 0; 
+}
+
+.dataTables_wrapper table tr th{
+    padding:3px;
+}
+
+#post-listing,#post-listing thead, #post-listing tbody{
+    width:100%;
+}
+
+.fg-toolbar{
+    padding:5px;
+}
+
+.dataTables_length,.dataTables_info{
+  float:left;
+  width:40%;  
+}
+
+.dataTables_paginate,.dataTables_filter{
+    float:right;
+    width:40%;  
+}
+
+.css_right {
+   float:right;
+}
+
+.dataTables_wrapper .odd{
+    padding:3px;
+    background:#f2f2f2;
+}
+
+.dataTables_wrapper .even{
+    padding:3px;
+    background:#f9f9f9;
+}
+
+.dataTables_wrapper .odd td,.dataTables_wrapper .even td{
+    padding:3px;
+}
+
+/*-------------------------------------------------------------------------------------------*/
+/* 8. MOBILE */
+/*-------------------------------------------------------------------------------------------*/
+
+/* 8.1 Layout */
+/*layouts smaller than 600px, iPhone and mobiles*/
+@media handheld and (max-width: 480px), screen and (max-device-width: 480px), screen and (max-width: 600px)  {
+    html { -webkit-text-size-adjust:none; -ms-text-size-adjust:none; }
+    h1,h2,h3,h4,h5,h6 { text-rendering: auto; }
+    #wrapper{width:97%;padding:0;}
+    h1,h2,h3{line-height: 1.1em;}
+    #content{margin:0;padding:0;}
+    #branding{padding:20px 0;}
+    #primary{margin:0;float:none;}
+    #secondary{display:none;}
+    .post img{max-width:300px;}
+    #facebook-like iframe{width:100% !important;}
+}
+
+/*layouts larger than 920px*/
+@media screen and (min-width: 920px) {
+}
+/*layouts larger than 1350px*/
+@media screen and (min-width: 1350px) {
+}
+/*Just iPhone*/
+@media only screen and (max-device-width: 480px) {
+}
+/*iPad styles*/
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+}
+
+/*-------------------------------------------------------------------------------------------*/
+/* 9. MOBILE */
+/*-------------------------------------------------------------------------------------------*/
+
+/* 9.1 Layout */
+@media print {
+  * { background: transparent !important; color: #444 !important; text-shadow: none; }
+  a, a:visited { color: #444 !important; text-decoration: underline; }
+  a:after { content: " (" attr(href) ")"; } 
+  abbr:after { content: " (" attr(title) ")"; } 
+  .ir a:after { content: ""; }  /* Don't show links for images */ 
+  pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
+  img { page-break-inside: avoid; }
+  @page { margin: 0.5cm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3{ page-break-after: avoid; }
+}

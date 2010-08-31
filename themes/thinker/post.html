@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{post.title|escape}} - {{config.blog_name}}{% endblock %}
+{% block bodyclasses %}{% if post.tags %}{% for tag in post.tag_pairs %}{{tag.1|escape}} {% endfor %}{% endif %}{% endblock %}
+{% block footer %}
+	{% if devel %}
+	  <script type="text/javascript">
+	    disqus_developer = 1;
+	  </script>
+	{% endif %}
+	<script type="text/javascript">
+	  (function() {
+	   var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	   dsq.src = 'http://{{config.disqus_forum}}.disqus.com/embed.js';
+	   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	  })();
+	</script>
+{% endblock %}
+{% block body %}
+    <article id="post-{{post_id}}" class="post ">
+        <header class="entry-header">
+            <h1 class="entry-title"><a href="{{config.url_prefix}}{{post.path}}" title="{{post.title|escape}}" rel="bookmark">{{post.title|escape}}</a></h1>
+            <div class="entry-meta">
+                <span class="meta-prep meta-prep-author">Posted on </span>
+                <a href="{{config.url_prefix}}{{post.path}}" rel="bookmark">
+                <time class="entry-date" datetime="{{post.published|date:config.iso_format}}" pubdate>{{post.published|date:config.date_format}}</time>
+                </a> 
+                <span class="meta-sep"> by </span> 
+                <span class="author vcard"><a class="url fn n" href="{{config.profile}}" title="{{config.author_name}}">{{config.author_name}}</a></span>
+            </div><!-- .entry-meta -->
+        </header><!-- .entry-header -->
+        <div class="entry-content">
+            {{post.rendered}}
+        </div><!-- .entry-summary -->
+    	<footer class="entry-meta">
+    	    <div class="share">
+	    	    <span id="backtype">
+	    	         <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+	    	         <div id="tweet-btn"><a href="http://twitter.com/share" class="twitter-share-button"
+	    	             data-url="http://{{config.host}}{{config.url_prefix}}{{post.path}}"
+	    	             data-via="johnturner"
+	    	             data-text="{{post.title|escape}}"
+	    	             data-count="horizontal"
+	    	             >Tweet</a></div>
+	            </span>
+	            <span id="facebook-like" >
+	            	<!--<fb:like href="http://{{config.host}}{{config.url_prefix}}{{post.path}}" show_faces="false" font="lucida grande"></fb:like>-->
+	            	<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2F{{config.host}}{{config.url_prefix}}{{post.path}}&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;font=lucida+grande&amp;colorscheme=light&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:23px;" allowTransparency="true"></iframe>
+	            </span>
+    	    </div>
+    	    {% if post.tags %}
+    			<span class="tag-links">Tags </span> 
+    			{% for tag in post.tag_pairs %}
+                  <a href="{{config.url_prefix}}/tag/{{tag.1|escape}}">{{tag.0|escape}}</a>{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+    		<!-- <span class="meta-sep"> | </span>
+    		<span class="meta-sep">|</span> <span class="edit-link"></span>-->
+    	</footer><!-- #entry-meta -->
+    </article><!-- #post-{{post.id}} -->
+    
+
+    <nav id="nav-below">
+    	<h1 class="screen-reader-text">Post Navigation</h1>		
+    	{% if prev_page %}
+    	<div class="nav-previous"><span class="meta-nav">&larr;</span><a id="prev" href="{{config.url_prefix}}{{prev_page}}">Older</a></div>
+    	{% endif %}
+        {% if next_page %}
+    	<div class="nav-next"><span class="meta-nav">&larr;</span><a id="next" href="{{config.url_prefix}}{{next_page}}">Newer</a></div>
+        {% endif %}
+    </nav><!-- #nav-below -->
+  
+    {% if config.disqus_forum %}
+    <section id="comments">
+    <h3>Comments</h3>
+    <div id="disqus_thread"></div>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+    </section>
+    {% endif %}
+    
+{% endblock %}

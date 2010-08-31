@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Search results - {{config.blog_name}}{% endblock %}
+{% block bodyclasses %}search{% endblock %}
+{% block body %}
+  <div id="cse-search-results"></div>
+  <script type="text/javascript">
+    var googleSearchIframeName = "cse-search-results";
+    var googleSearchFormName = "cse-search-box";
+    var googleSearchFrameWidth = 649;
+    var googleSearchDomain = "www.google.com";
+    var googleSearchPath = "/cse";
+  </script>
+  <script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
+{% endblock %}

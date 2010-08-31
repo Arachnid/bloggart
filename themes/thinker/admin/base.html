@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block bodyclasses %}admin{% endblock %}
+{% block menu %}
+  <li{% ifequal handler_class "AdminHandler" %} id="current"{% endifequal %}><a href="{{config.url_prefix}}/admin/">Posts</a></li>
+  <li{% ifequal path "/admin/newpost" %} id="current"{% endifequal %}><a href="{{config.url_prefix}}/admin/newpost">New Post</a></li>
+{% endblock %}

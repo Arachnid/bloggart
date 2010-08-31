@@ -1,0 +1,91 @@
+{% extends "admin/base.html" %}
+{% block title %}All Posts{% endblock %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{config.url_prefix}}/static/{{config.theme}}/css/cupertino/jquery-ui-1.8.2.custom.css" >
+{% endblock %}
+{% block footer %}
+	<script type="text/javascript" src="{{config.url_prefix}}/static/{{config.theme}}/js/jquery.dataTables.min.js"></script> 
+	<script type="text/javascript"> 
+		jQuery(document).ready(function() {
+			jQuery('#post-listing').dataTable({
+			    "bJQueryUI": true,
+			    "bAutoWidth": false,
+				"sPaginationType": "full_numbers",
+				"aaSorting": [[ 1, "desc" ]],
+	    		"aoColumns": [
+	    			null,
+	    			null,
+	    			null
+	    		]
+    		
+			    });
+		} );
+	</script>
+	<script type="text/javascript">
+	  function delete_post(id){
+	    var decision = confirm("Are you sure you want to delete this post.");
+	    if(decision){
+	      document.forms['delete_form_' + id].submit();
+	      return true;
+	    }
+	    else {
+	      return false;
+	    }
+	  }
+	</script>
+{% endblock %}
+{% block body %}
+  <h2>All Posts</h2>
+  {% ifnotequal last_post -1 %}
+    <p>Posts {{offset|add:1}} to {{last_post|add:1}}</p>
+    <table id="post-listing" class="clearfix">
+      <thead>
+	<tr><th>Title</th><th>Published</th><th>Actions</th></tr>
+      </thead>
+      {% for post in posts %}
+        <tr>
+          <td><a href="{{config.url_prefix}}/admin/post/{{post.key.id}}">{{post.title|escape}}</a></td>
+          <td>{% if post.path %}{{post.published|date:"Y-m-d"}}{% else %}Draft{% endif %}</td>
+	  <td>
+	    {% if post.path %}
+	      <a href="{{config.url_prefix}}{{post.path}}">View</a>
+	    {% else %}
+	      <a href="{{config.url_prefix}}/admin/post/preview/{{post.key.id}}">Preview</a>
+	    {% endif %}
+	      |
+	    <a href="{{config.url_prefix}}/admin/post/{{post.key.id}}">Edit</a>
+        |
+      <form id="delete_form_{{post.key.id}}" 
+        action="{{config.url_prefix}}/admin/post/delete/{{post.key.id}}" method="post" 
+        style="display:inline;margin:0;padding:0;background:none;border:none;">
+        <a href="#" onclick="javascript:delete_post('{{post.key.id}}');">Delete</a>
+      </form>
+	  </td>
+	</tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>
+      No posts yet.<br />
+      <a href="{{config.url_prefix}}/admin/newpost">Write your first post.</a>
+    </p>
+  {% endifnotequal %}
+  {% ifnotequal offset 0 %}
+    <a href="?start={{prev_offset}}&count={{count}}">&lt;- Previous</a>
+  {% endifnotequal %}
+  {% if posts|length_is:count %}
+    <a href="?start={{next_offset}}&count={{count}}">Next -></a>
+  {% endif %}
+
+  <h2>Admin Actions</h2>
+  <form method="post" action="{{config.url_prefix}}/admin/regenerate">
+      <label for="gen_list">Available content generators:</label><br />
+         <select multiple="true" id="gen_list" name="generators">
+         {% for gen in generators %}
+           <option selected="true">{{gen}}</option>
+         {% endfor %}
+         </select><br />
+         <input type="submit" value="Regenerate" />
+  </form>
+
+{% endblock %}

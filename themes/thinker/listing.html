@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{config.blog_name}}{% endblock %}
+{% block bodyclasses %}listing{% endblock %}
+{% block footer %}
+{% if config.disqus_forum %}
+	 <script type="text/javascript">
+	 var disqus_shortname = '{{config.disqus_forum}}';
+	 (function () {
+	 var s = document.createElement('script'); s.async = true;
+	 s.src = 'http://disqus.com/forums/{{config.disqus_forum}}/count.js';
+	 (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+	 }());
+	 </script>
+{% endif %}
+{% endblock %}
+{% block body %}
+  {% for post in posts %}
+    <article class="post {% if post.tags %}{% for tag in post.tag_pairs %}{{tag.1|escape}} {% endfor %}{% endif %}">
+        <header class="entry-header">
+            <h1 class="entry-title"><a href="{{config.url_prefix}}{{post.path}}" title="{{post.title|escape}}" rel="bookmark">{{post.title|escape}}</a></h1>
+            <div class="entry-meta">
+                <span class="meta-prep meta-prep-author">Posted on </span>
+                <a href="{{config.url_prefix}}{{post.path}}" rel="bookmark">
+                <time class="entry-date" datetime="{{post.published|date:config.iso_format}}" pubdate>{{post.published|date:config.date_format}}</time>
+                </a> 
+                <span class="meta-sep"> by </span> 
+                <span class="author vcard"><a class="url fn n" href="{{config.profile}}" title="{{config.author_name}}">{{config.author_name}}</a></span>
+            </div><!-- .entry-meta -->
+        </header><!-- .entry-header -->
+        <div class="entry-summary">
+            {{post.summary}}
+            <br /><a href="{{config.url_prefix}}{{post.path}}" class="readmore">Read more &raquo;</a> 
+        </div><!-- .entry-summary -->
+		<footer class="entry-meta">
+		    {% if post.tags %}
+    			<span class="tag-links">Tags </span> 
+    			{% for tag in post.tag_pairs %}
+                  <a href="{{config.url_prefix}}/tag/{{tag.1|escape}}">{{tag.0|escape}}</a>{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+			<span class="meta-sep"> | </span>
+			<span class="comments-link"><a href="{{config.url_prefix}}{{post.path}}#disqus_thread">Comments</a></span>
+			<!-- <span class="meta-sep">|</span> <span class="edit-link"></span>-->
+		</footer><!-- #entry-meta -->
+	</article><!-- #post-{{post.id}} -->
+	{% endfor %}
+	<nav id="nav-below">
+		<h1 class="screen-reader-text">Post Navigation</h1>	
+		{% if next_page %}
+		<div class="nav-next"><span class="meta-nav">&larr;</span><a id="next" href="{{config.url_prefix}}{{next_page}}">Older</a></div>
+	    {% endif %}
+		{% if prev_page %}
+		<div class="nav-previous"><a id="prev" href="{{config.url_prefix}}{{prev_page}}">Newer</a><span class="meta-nav">&rarr;</span></div>
+		{% endif %}	
+	</nav><!-- #nav-below -->
+{% endblock %}

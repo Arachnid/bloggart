@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="utf-8"> 
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="description" content="{{config.slogan}}">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0;"> 
+    {% block style %}<link rel="stylesheet" href="{{config.url_prefix}}/static/{{config.theme}}/css/style.css?v=1">{% endblock %}
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Cardo" >
+    <link rel="stylesheet" href="{{config.url_prefix}}/static/{{config.theme}}/css/syntaxhighlighter/shCore.css">
+    <link rel="stylesheet" href="{{config.url_prefix}}/static/{{config.theme}}/css/syntaxhighlighter/shThemeMidnight.css">
+    <link rel="alternate" type="application/atom+xml" href="{% if config.feed_proxy %}{{ config.feed_proxy }}{% else %}{{config.url_prefix}}/feeds/atom.xml{% endif %}">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="canonical" href="{{canonical_url}}">
+    {% if config.rel_me %}<link rel="me" href="{{config.rel_me}}">{% endif %} 
+    <script type="text/javascript" src="{{config.url_prefix}}/static/{{config.theme}}/js/modernizr-1.5.min.js"></script>
+    {% block head %}{% endblock %}
+</head>
+<!--[if lt IE 7 ]> <body class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <body class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <body class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <body class="ie9"> <![endif]-->
+<!--[if gt IE 9]>  <body>             <![endif]-->
+<!--[if !IE]><!--> <body>         <!--<![endif]-->
+    <div id="wrapper" class="hfeed {% block bodyclasses %}{% endblock %}">
+        <header id="branding">
+            <hgroup>
+                <h1 id="site-title"><span><a href="{{config.url_prefix}}/" title="{{config.blog_name}}" rel="home">{{config.blog_name}}</a></span></h1>
+    			<h2 id="site-description">{{config.slogan}}</h2>
+            </hgroup>
+        </header><!-- #branding -->
+        
+        <nav id="access">
+    		<h1 class="screen-reader-text">Main menu</h1>
+    		<div class="skip-link screen-reader-text"><a href="#content" title="Skip to content">Skip to content</a></div>
+
+    		<div class="menu">
+    		    <ul>
+    		        <li class="{% ifequal generator_class "IndexContentGenerator" %}current_{% endifequal %}page_item"><a href="{{config.url_prefix}}/">Home</a></li>
+    		        {% block menu %}{% endblock %}
+    		    </ul>
+    		</div>
+    	</nav><!-- #access -->
+    	
+	    <div id="main">
+    	    <div id="primary"> 
+        	    <div id="content">
+        	        {% block body %}{% endblock %}
+        	    </div><!-- #content -->
+        	</div><!-- #primary -->
+        	
+        	<div id="secondary" class="widget-area">
+    			<ul class="xoxo">
+    		        {% for sidebar in config.sidebars %}
+                    <li id="widget-{{sidebar.0|lower}}" class="widget-container">
+                        <h2 class="widget-title">{{sidebar.0}}</h2>
+                        <ul>
+                          {% for entry in sidebar.1 %}
+                            <li>{{entry}}</li>
+                          {% endfor %}
+                        </ul>
+                    </li>
+                    {% endfor %}
+                    <li id="search" class="widget-container widget-search">
+            		        <form id="quick-search" action="{{config.url_prefix}}/search" method="get">
+                              <p>
+                                <label for="q">Search:</label>
+                                <input type="hidden" name="cref" value="http://static.johndturner.com/cse.xml" />
+                                <input type="hidden" name="cof" value="FORID:11" />
+                                <input type="hidden" name="ie" value="UTF-8" />
+                                <input class="tbox" type="text" name="q" size="31" />
+                                <input class="btn" type="image" name="sa" value="Search" src="{{config.url_prefix}}/static/{{config.theme}}/images/btn-search.png" alt="Search" />
+                              </p>
+                            </form>
+                            <script type="text/javascript" src="http://www.google.com/cse/brand?form=quick-search&lang=en"></script>
+        		        </li>
+    		        <li id="widget-realtime" class="widget-container">
+    		            <h2 class="widget-title">Reading &amp; Sharing</h2>
+    		            <ul>
+    		            </ul>
+    		         </li>
+    			</ul>
+        	</div><!-- #secondary .widget-area -->
+        </div><!-- #main -->
+        
+        <footer id="colophon">
+            <div id="site-generator">
+                &copy; 2010 johndturner.com
+            </div>
+        </footer>
+        
+    </div><!-- #wrapper -->
+    
+    <!-- Facebook API -->
+    <!--<div id="fb-root"></div>
+    <script type="text/javascript">
+      window.fbAsyncInit = function() {
+        FB.init({appId: '60975220621', status: true, cookie: true,
+                 xfbml: true});
+      };
+      (function() {
+        var e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.src = document.location.protocol +
+          '//connect.facebook.net/en_US/all.js';
+        e.async = true;
+        document.getElementById('fb-root').appendChild(e);
+      }());
+    </script>-->
+    <!-- Google API's -->
+    <script type="text/javascript" src="http://www.google.com/jsapi?key=AIzaSyBWk2VmSTr0NZEcYvE7o11A7Rkl4gRF-LY"></script>
+    <script type="text/javascript">
+        google.load("jquery", "1.4.2");
+        google.load('feeds', '2', {"nocss" : true});
+    </script>
+    <!-- My Scripts -->
+    <script type="text/javascript" src="{{config.url_prefix}}/static/{{config.theme}}/js/plugins.js?v=1"></script>
+    <script type="text/javascript" src="{{config.url_prefix}}/static/{{config.theme}}/js/script.js?v=1"></script>
+    <!--[if lt IE 7 ]>
+    <script type="text/javascript" src="{{config.url_prefix}}/static/{{config.theme}}/js/dd_belatedpng.js?v=1"></script>
+    <![endif]-->
+    {% if config.analytics_id and not devel and not is_admin %}
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+        //<![CDATA[
+    	var _gaq = _gaq || [];
+    	_gaq.push(['_setAccount','{{config.analytics_id}}']);
+    	_gaq.push(['_trackPageview']);
+    	(function() {
+    		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    	})();
+    	//]]>
+	</script>
+    {% endif %}
+	<!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="{{config.url_prefix}}/static/{{config.theme}}/js/syntaxhighlighter/shCore.js"></script>
+    <script type="text/javascript" src="{{config.url_prefix}}/static/{{config.theme}}/js/syntaxhighlighter/shAutoloader.js"></script>
+    <script type="text/javascript">
+    function path()
+    {
+      var args = arguments,
+          result = []
+          ;
+
+      for(var i = 0; i < args.length; i++)
+          result.push(args[i].replace('@', '{{config.url_prefix}}/static/{{config.theme}}/js/syntaxhighlighter/'));
+
+      return result
+    };
+
+    SyntaxHighlighter.autoloader.apply(null, path(
+      'applescript            @shBrushAppleScript.js',
+      'actionscript3 as3      @shBrushAS3.js',
+      'bash shell             @shBrushBash.js',
+      'coldfusion cf          @shBrushColdFusion.js',
+      'cpp c                  @shBrushCpp.js',
+      'c# c-sharp csharp      @shBrushCSharp.js',
+      'css                    @shBrushCss.js',
+      'delphi pascal          @shBrushDelphi.js',
+      'diff patch pas         @shBrushDiff.js',
+      'erl erlang             @shBrushErlang.js',
+      'groovy                 @shBrushGroovy.js',
+      'java                   @shBrushJava.js',
+      'jfx javafx             @shBrushJavaFX.js',
+      'js jscript javascript  @shBrushJScript.js',
+      'perl pl                @shBrushPerl.js',
+      'php                    @shBrushPhp.js',
+      'text plain             @shBrushPlain.js',
+      'py python              @shBrushPython.js',
+      'ruby rails ror rb      @shBrushRuby.js',
+      'sass scss              @shBrushSass.js',
+      'scala                  @shBrushScala.js',
+      'sql                    @shBrushSql.js',
+      'vb vbnet               @shBrushVb.js',
+      'xml xhtml xslt html    @shBrushXml.js'
+    ));
+    SyntaxHighlighter.all();
+    </script>
+	{% block footer %}{% endblock %}
+</body>
+</html>

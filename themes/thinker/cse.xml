@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<GoogleCustomizations>
+  <CustomSearchEngine volunteers="false" visible="false" encoding="utf-8" autocompletions="true">
+    <Title>{{config.blog_name}}</Title>
+    <Description>{{config.slogan}}</Description>
+    <Context>
+      <BackgroundLabels>
+        <Label name="cse_include" mode="FILTER" />
+        <Label name="cse_exclude" mode="ELIMINATE" />
+      </BackgroundLabels>
+    </Context>
+    <LookAndFeel nonprofit="false" />
+  </CustomSearchEngine>  
+  <Annotations>
+    <Annotation about="http://{{config.host}}{{config.url_prefix}}/*">
+      <Label name="cse_include" />
+    </Annotation>
+  </Annotations>
+</GoogleCustomizations>

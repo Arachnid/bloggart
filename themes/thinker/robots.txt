@@ -1,0 +1,6 @@
+Sitemap: http://{{config.host}}{{config.url_prefix}}/sitemap.xml
+
+# http://www.robotstxt.org/
+# http://www.google.com/support/webmasters/bin/answer.py?hl=en&answer=156449
+ 
+User-agent: *

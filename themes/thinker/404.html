@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Page Not Found{% endblock %}
+{% block body %}
+<article id="post-0" class="post error404 not-found">
+	<header class="entry-header">
+		<h1 class="entry-title">This is somewhat embarrassing, isn&rsquo;t it?</h1>
+	</header>
+	
+	<div class="entry-content">
+	    <p>It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching, or one of the links below, can help.</p>
+        <script type='text/javascript'>
+        var GOOG_FIXURL_LANG = 'en';
+        var GOOG_FIXURL_SITE = 'http://{{config.host}}';
+        </script>
+        <script type='text/javascript' src='http://linkhelp.clients.google.com/tbproxy/lh/wm/fixurl.js'></script>
+	</div><!-- .entry-content -->
+</article><!-- #post-0 -->
+{% endblock %}
