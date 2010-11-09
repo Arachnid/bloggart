@@ -16,7 +16,7 @@
     <span class="date">{{post.published|date:"d F, Y"}}</span>
   </p>
   
-  {% if config.disqus_forum %}
+  {% if config.disqus_forum and not is_admin %}
     <h3 id="comments">Comments</h3>
     <div id="disqus_thread"></div>
     {% if devel %}
