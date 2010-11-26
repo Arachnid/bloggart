@@ -53,7 +53,7 @@ class CodeBlockPreprocessor(TextPreprocessor):
     pattern = re.compile(
         r'\s*\[sourcecode:(.+?)\](.+?)\[/sourcecode\]\s*', re.S)
 
-    formatter = HtmlFormatter(noclasses=INLINESTYLES, lineseparator=LINEENDING)
+    formatter = HtmlFormatter(noclasses=INLINESTYLES, lineseparator=LINEENDING, linenos='inline')
 
     def run(self, lines):
         def repl(m):
