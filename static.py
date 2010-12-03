@@ -1,3 +1,4 @@
+import os
 import datetime
 import hashlib
 
@@ -119,6 +120,15 @@ def remove(path):
       return
     content.delete() 
   return db.run_in_transaction(_tx)
+  
+def canonical_redirect(func):
+  def _dec(self, path):
+    if not self.request.host == config.host:
+      self.redirect("%s://%s%s" % (self.request.scheme, config.host, path), True)
+    else:
+      func(self, path)
+  return _dec
+
 
 class StaticContentHandler(webapp.RequestHandler):
   def output_content(self, content, serve=True):
@@ -127,6 +137,7 @@ class StaticContentHandler(webapp.RequestHandler):
     last_modified = content.last_modified.strftime(HTTP_DATE_FMT)
     self.response.headers['Last-Modified'] = last_modified
     self.response.headers['ETag'] = '"%s"' % (content.etag,)
+    self.response.headers['X-UA-Compatible'] = 'Chrome=1'
     for header in content.headers:
       key, value = header.split(':', 1)
       self.response.headers[key] = value.strip()
@@ -136,6 +147,7 @@ class StaticContentHandler(webapp.RequestHandler):
     else:
       self.response.set_status(304)
   
+  #@canonical_redirect
   def get(self, path):
     if not path.startswith(config.url_prefix):
       if path not in ROOT_ONLY_FILES:
@@ -173,10 +185,10 @@ class StaticContentHandler(webapp.RequestHandler):
         serve = False
     self.output_content(content, serve)
 
-
+DEBUG = os.environ['SERVER_SOFTWARE'].startswith('Dev')
 application = webapp.WSGIApplication([
                 ('(/.*)', StaticContentHandler),
-              ])
+              ],debug=DEBUG)
 
 
 def main():

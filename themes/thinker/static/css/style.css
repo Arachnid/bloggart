@@ -1,6 +1,6 @@
 /*
 Theme Name: Thinker
-Description: HTML5 theme based off of Paul Irish's Boiler Plate http://html5boilerplate.com/.
+Description: One bad ass theme.
 Author: John Turner
 Author URI: http://johndturner.com
 Version: 0.1
@@ -140,13 +140,14 @@ pre,code,kbd,samp,tt {font-family:monospace;*font-size:108%;line-height:100%;}
 html { -webkit-font-smoothing: antialiased; }
 body{background:#fff;}
 body, select, input, textarea { color:#444; }
-h1,h2,h3,h4,h5,h6 { text-rendering: optimizeLegibility; }
-h1,h2,h3{font-family: 'Cardo', arial, serif;}
+h1,h2,h3,h4,h5,h6 { text-rendering: optimizeLegibility;}
+h1,h2,h3{font-weight:500;}
 h1{font-size:197%;}
 h2{font-size:167%;}
 h3{font-size:108%;}
 h1,h2,h3{margin:0 0 1em 0;}
-h1,h2,h3,h4,h5,h6,strong{font-weight:bold;}
+/*h1,h2,h3,h4,h5,h6,strong{font-weight:bold;}*/
+strong{font-weight:bold;}
 abbr,acronym{border-bottom:1px dotted #000;cursor:help;}
 em{font-style:italic;}
 blockquote,ul,ol,dl{margin:1em;}
@@ -217,7 +218,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover  {text-de
 /*-------------------------------------------------------------------------------------------*/
 
 /* 2.1 Layout */
-#wrapper{width:960px;margin:0 auto;font-size:108%;line-height:1.6em;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;padding:0 20px}
+#wrapper{width:960px;margin:0 auto;font-size:108%;line-height:1.6em;padding:0 20px}
 #primary{float: right;margin: 0 0 0 -250px;width: 100%;}
 #content {margin: 0 0 0 250px;}
 #secondary {float: left;overflow: hidden;width: 200px;}
@@ -277,8 +278,8 @@ blockquote{background:url('../images/quote.png') no-repeat left top;padding:0 0 
 
 /* 4.3 Specific Widgets */
 /* NAVIGATION */
-#widget-navigation{text-align:right;}
-
+#widget-navigation,#widget-twitter{text-align:right;}
+#widget-twitter{margin: -10px 0px 10px;}
 /* SEARCH */
 #search label{display:none;}
 #quick-search p{border:1px solid #f2f2f2;}

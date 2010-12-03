@@ -16,7 +16,7 @@
   <h2>All Posts</h2>
   {% ifnotequal last_post -1 %}
     <p>Posts {{offset|add:1}} to {{last_post|add:1}}</p>
-    <table>
+    <table id="post-listing">
       <thead>
 	<tr><th>Title</th><th>Published</th><th>Actions</th></tr>
       </thead>
@@ -59,4 +59,14 @@
   <form method="post" action="{{config.url_prefix}}/admin/regenerate">
     <input type="submit" value="Regenerate all posts" />
   </form>
+  <style type="text/css"> 
+		@import "{{config.url_prefix}}/static/{{config.theme}}/js/datatable/media/css/demo_page.css";
+		@import "{{config.url_prefix}}/static/{{config.theme}}/js/datatable/media/css/demo_table.css";
+	</style> 
+	<script type="text/javascript" src="{{config.url_prefix}}/static/{{config.theme}}/js/datatable/media/js/jquery.dataTables.js"></script> 
+	<script type="text/javascript"> 
+		$(document).ready(function() {
+			$('#post-listing').dataTable();
+		} );
+	</script>
 {% endblock %}

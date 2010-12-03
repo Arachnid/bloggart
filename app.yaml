@@ -1,7 +1,12 @@
-application: bloggart-demo
+application: john-turner
 version: live
 runtime: python
 api_version: 1
+
+#default_expiration: "365d"
+
+derived_file_type:
+- python_precompiled
 
 skip_files: |
  ^(.*/)?(
@@ -12,6 +17,7 @@ skip_files: |
  (#.*#)|
  (.*~)|
  (.*\.py[co])|
+ (\.DS_Store)
  )$
 
 
@@ -27,6 +33,10 @@ handlers:
 - url: /admin/.*
   script: admin.py
   login: admin
+  
+- url: /favicon.ico
+  static_files: themes/thinker/favicon.ico
+  upload: themes/thinker/favicon.ico
 
 - url: /static/([^/]+)/(.*)
   static_files: themes/\1/static/\2

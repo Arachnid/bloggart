@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <GoogleCustomizations>
-  <CustomSearchEngine volunteers="false" visible="false" encoding="utf-8">
+  <CustomSearchEngine volunteers="false" visible="false" encoding="utf-8" autocompletions="true">
     <Title>{{config.blog_name}}</Title>
     <Description>{{config.slogan}}</Description>
     <Context>

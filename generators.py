@@ -109,7 +109,10 @@ class PostContentGenerator(ContentGenerator):
       template_vals['prev']=prev
     if next is not None:
       template_vals['next']=next
+    template_vals['post_id'] = post.key().id()
+    template_vals['canonical_url'] = 'http://' + config.host + post.path
     rendered = utils.render_template("post.html", template_vals)
+    rendered = str(utils.oembed_replace(rendered,'post'))
     static.set(post.path, rendered, config.html_mime_type)
 generator_list.append(PostContentGenerator)
 
@@ -136,7 +139,10 @@ class PostPrevNextContentGenerator(PostContentGenerator):
      template_vals['prev']=prev
     if next is not None:
      template_vals['next']=next
+    template_vals['post_id'] = post.key().id()
+    template_vals['canonical_url'] = 'http://' + config.host + post.path
     rendered = utils.render_template("post.html", template_vals)
+    rendered = str(utils.oembed_replace(rendered,'post'))
     static.set(post.path, rendered, config.html_mime_type)
 generator_list.append(PostPrevNextContentGenerator)
 
@@ -174,8 +180,10 @@ class ListingContentGenerator(ContentGenerator):
     path_args = {
         'resource': resource,
     }
+    _get_path = lambda: \
+                  cls.first_page_path if path_args['pagenum'] == 1 else cls.path
     path_args['pagenum'] = pagenum - 1
-    prev_page = cls.path % path_args
+    prev_page = _get_path() % path_args
     path_args['pagenum'] = pagenum + 1
     next_page = cls.path % path_args
     template_vals = {
@@ -184,14 +192,11 @@ class ListingContentGenerator(ContentGenerator):
         'prev_page': prev_page if pagenum > 1 else None,
         'next_page': next_page if more_posts else None,
     }
-    rendered = utils.render_template("listing.html", template_vals)
-
     path_args['pagenum'] = pagenum
-    static.set(cls.path % path_args, rendered, config.html_mime_type)
-    if pagenum == 1:
-      static.set(cls.first_page_path % path_args, rendered,
-                 config.html_mime_type)
-
+    template_vals['canonical_url'] = 'http://' + config.host + _get_path() % path_args
+    rendered = utils.render_template("listing.html", template_vals)
+    rendered = str(utils.oembed_replace(rendered,'list'))
+    static.set(_get_path() % path_args, rendered, config.html_mime_type)
     if more_posts:
         deferred.defer(cls.generate_resource, None, resource, pagenum + 1,
                        posts[-2].published)
@@ -239,7 +244,7 @@ class AtomContentGenerator(ContentGenerator):
   @classmethod
   def generate_resource(cls, post, resource):
     import models
-    q = models.BlogPost.all().order('-updated')
+    q = models.BlogPost.all().order('-published')
     # Fetch the 10 most recently updated non-draft posts
     posts = list(itertools.islice((x for x in q if x.path), 10))
     now = datetime.datetime.now().replace(second=0, microsecond=0)
@@ -248,6 +253,7 @@ class AtomContentGenerator(ContentGenerator):
         'updated': now,
     }
     rendered = utils.render_template("atom.xml", template_vals)
+    rendered = str(utils.oembed_replace(rendered,'atom'))
     static.set('/feeds/atom.xml', rendered,
                'application/atom+xml; charset=utf-8', indexed=False,
                last_modified=now)

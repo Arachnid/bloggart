@@ -6,7 +6,9 @@
     <meta name="description" content="{{config.slogan}}">
     <meta name="viewport" content="width=device-width; initial-scale=1.0;"> 
     {% block style %}<link rel="stylesheet" href="{{config.url_prefix}}/static/{{config.theme}}/css/style.css?v=1">{% endblock %}
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Cardo" >
+    <!--<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Cardo" >-->
+    <script type="text/javascript" src="http://use.typekit.com/sec8pvi.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
     <link rel="stylesheet" href="{{config.url_prefix}}/static/{{config.theme}}/css/syntaxhighlighter/shCore.css">
     <link rel="stylesheet" href="{{config.url_prefix}}/static/{{config.theme}}/css/syntaxhighlighter/shThemeMidnight.css">
     <link rel="alternate" type="application/atom+xml" href="{% if config.feed_proxy %}{{ config.feed_proxy }}{% else %}{{config.url_prefix}}/feeds/atom.xml{% endif %}">
@@ -62,6 +64,9 @@
                         </ul>
                     </li>
                     {% endfor %}
+                    <li id="widget-twitter" class="widget-container"><a href="http://www.twitter.com/johnturner">
+        		        <img src="http://twitter-badges.s3.amazonaws.com/follow_bird-a.png" alt="Follow johnturner on Twitter"/></a>
+        		    </li>
                     <li id="search" class="widget-container widget-search">
             		        <form id="quick-search" action="{{config.url_prefix}}/search" method="get">
                               <p>
@@ -75,6 +80,7 @@
                             </form>
                             <script type="text/javascript" src="http://www.google.com/cse/brand?form=quick-search&lang=en"></script>
         		        </li>
+        		    
     		        <li id="widget-realtime" class="widget-container">
     		            <h2 class="widget-title">Reading &amp; Sharing</h2>
     		            <ul>
