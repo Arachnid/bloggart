@@ -8,7 +8,7 @@ import config
 import models
 import static
 import utils
-
+import generators
 
 BLOGGART_VERSION = (1, 0, 1)
 
@@ -32,6 +32,19 @@ class PostRegenerator(object):
     if len(posts) == batch_size:
       deferred.defer(self.regenerate, batch_size, posts[-1].published)
 
+class PageRegenerator(object):
+  def __init__(self):
+    self.seen = set()
+
+  def regenerate(self, batch_size=50, start_ts=None):
+    q = models.Page.all().order('-created')
+    q.filter('created <', start_ts or datetime.datetime.max)
+    pages = q.fetch(batch_size)
+    for page in pages:
+      deferred.defer(generators.PageContentGenerator.generate_resource, page, None);
+      page.put()
+    if len(pages) == batch_size:
+      deferred.defer(self.regenerate, batch_size, pages[-1].created)
 
 post_deploy_tasks = []
 

@@ -147,6 +147,35 @@ class BlogPost(db.Model):
       self.deps[generator_class.name()] = (new_deps, new_etag)
       yield generator_class, to_regenerate
 
+class Page(db.Model):
+  # The URL path to the page.
+  path = db.StringProperty(required=True)
+  title = db.TextProperty(required=True)
+  template = db.StringProperty(required=True)
+  body = db.TextProperty(required=True)
+  created = db.DateTimeProperty()
+  updated = db.DateTimeProperty()
+
+  @property
+  def rendered(self):
+    # Returns the rendered body.
+    return markup.render_body(self)
+
+  @property
+  def hash(self):
+    val = (self.path, self.body, self.published)
+    return hashlib.sha1(str(val)).hexdigest()
+
+  def publish(self):
+    self._key_name = self.path
+    self.put()
+    generators.PageContentGenerator.generate_resource(self, self.path);
+
+  def remove(self):
+    if not self.is_saved():   
+      return
+    self.delete()
+    generators.PageContentGenerator.generate_resource(self, self.path, action='delete')
 
 class VersionInfo(db.Model):
   bloggart_major = db.IntegerProperty(required=True)

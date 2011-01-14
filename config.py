@@ -14,6 +14,12 @@ host = 'localhost:8080'
 # the 'themes' directory, containing templates and static content.
 theme = 'default'
 
+# List of page templates
+page_templates = {
+	'Theme.html': 'Theme',
+	'Simple.html': 'Simple',
+}
+
 # Defines the URL organization to use for blog postings. Valid substitutions:
 #   slug - the identifier for the post, derived from the title
 #   year - the year the post was published in

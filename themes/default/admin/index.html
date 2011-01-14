@@ -13,7 +13,10 @@
       }
     }
   </script>
-  <h2>All Posts</h2>
+  <h2>Posts</h2>
+    <p>
+	  <a href="{{config.url_prefix}}/admin/newpost">Create new post...</a>
+	</p>
   {% ifnotequal last_post -1 %}
     <p>Posts {{offset|add:1}} to {{last_post|add:1}}</p>
     <table>
@@ -54,8 +57,7 @@
   {% if posts|length_is:count %}
     <a href="?start={{next_offset}}&count={{count}}">Next -></a>
   {% endif %}
-
-  <h2>Admin Actions</h2>
+  <h2>Actions</h2>
   <form method="post" action="{{config.url_prefix}}/admin/regenerate">
     <input type="submit" value="Regenerate all posts" />
   </form>

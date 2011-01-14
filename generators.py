@@ -329,3 +329,16 @@ class AtomContentGenerator(ContentGenerator):
     if response.status_code / 100 != 2:
       raise Exception("Hub ping failed", response.status_code, response.content)
 generator_list.append(AtomContentGenerator)
+
+class PageContentGenerator:
+  @classmethod
+  def generate_resource(cls, page, resource, action='post'):
+    # Handle deletion
+    if action == 'delete':
+      static.remove(page.path)
+      return
+    template_vals = {
+        'page': page,
+    }
+    rendered = utils.render_template('pages/%s' % (page.template,), template_vals)
+    static.set(page.path, rendered, config.html_mime_type)

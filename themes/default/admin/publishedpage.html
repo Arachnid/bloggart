@@ -1,0 +1,10 @@
+{% extends "admin/base.html" %}
+{% block title %}Page published{% endblock %}
+{% block body %}
+  {% ifequal page.created page.updated %}
+    <p>Your page has been created!</p>
+  {% else %}
+    <p>Your page has been updated!</p>
+  {% endifequal %}
+  <p><a href="{{config.url_prefix}}{{page.path}}">View your page</a></p>
+{% endblock %}
