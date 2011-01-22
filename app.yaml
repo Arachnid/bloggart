@@ -8,6 +8,9 @@ api_version: 1
 derived_file_type:
 - python_precompiled
 
+inbound_services:
+- warmup
+
 skip_files: |
  ^(.*/)?(
  (app\.yaml)|
@@ -44,3 +47,4 @@ handlers:
 
 - url: /.*
   script: static.py
+  

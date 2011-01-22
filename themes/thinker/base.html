@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width; initial-scale=1.0;"> 
     {% block style %}<link rel="stylesheet" href="{{config.url_prefix}}/static/{{config.theme}}/css/style.css?v=1">{% endblock %}
     <!--<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Cardo" >-->
-    <script type="text/javascript" src="http://use.typekit.com/sec8pvi.js"></script>
-    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <!--<script type="text/javascript" src="http://use.typekit.com/sec8pvi.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>-->
     <link rel="stylesheet" href="{{config.url_prefix}}/static/{{config.theme}}/css/syntaxhighlighter/shCore.css">
     <link rel="stylesheet" href="{{config.url_prefix}}/static/{{config.theme}}/css/syntaxhighlighter/shThemeMidnight.css">
     <link rel="alternate" type="application/atom+xml" href="{% if config.feed_proxy %}{{ config.feed_proxy }}{% else %}{{config.url_prefix}}/feeds/atom.xml{% endif %}">
@@ -81,11 +81,6 @@
                             <script type="text/javascript" src="http://www.google.com/cse/brand?form=quick-search&lang=en"></script>
         		        </li>
         		    
-    		        <li id="widget-realtime" class="widget-container">
-    		            <h2 class="widget-title">Reading &amp; Sharing</h2>
-    		            <ul>
-    		            </ul>
-    		         </li>
     			</ul>
         	</div><!-- #secondary .widget-area -->
         </div><!-- #main -->
@@ -97,6 +92,7 @@
         </footer>
         
     </div><!-- #wrapper -->
+    <a href="http://github.com/johnnytee"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://assets2.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71?repo=&url=http%3A%2F%2Fs3.amazonaws.com%2Fgithub%2Fribbons%2Fforkme_right_darkblue_121621.png&path=" alt="Fork me on GitHub"></a>
     
     <!-- Facebook API -->
     <!--<div id="fb-root"></div>
@@ -118,7 +114,6 @@
     <script type="text/javascript" src="http://www.google.com/jsapi?key=AIzaSyBWk2VmSTr0NZEcYvE7o11A7Rkl4gRF-LY"></script>
     <script type="text/javascript">
         google.load("jquery", "1.4.2");
-        google.load('feeds', '2', {"nocss" : true});
     </script>
     <!-- My Scripts -->
     <script type="text/javascript" src="{{config.url_prefix}}/static/{{config.theme}}/js/plugins.js?v=1"></script>
@@ -158,29 +153,14 @@
     };
 
     SyntaxHighlighter.autoloader.apply(null, path(
-      'applescript            @shBrushAppleScript.js',
-      'actionscript3 as3      @shBrushAS3.js',
       'bash shell             @shBrushBash.js',
-      'coldfusion cf          @shBrushColdFusion.js',
-      'cpp c                  @shBrushCpp.js',
-      'c# c-sharp csharp      @shBrushCSharp.js',
-      'css                    @shBrushCss.js',
-      'delphi pascal          @shBrushDelphi.js',
-      'diff patch pas         @shBrushDiff.js',
-      'erl erlang             @shBrushErlang.js',
-      'groovy                 @shBrushGroovy.js',
-      'java                   @shBrushJava.js',
-      'jfx javafx             @shBrushJavaFX.js',
       'js jscript javascript  @shBrushJScript.js',
-      'perl pl                @shBrushPerl.js',
       'php                    @shBrushPhp.js',
       'text plain             @shBrushPlain.js',
       'py python              @shBrushPython.js',
       'ruby rails ror rb      @shBrushRuby.js',
       'sass scss              @shBrushSass.js',
-      'scala                  @shBrushScala.js',
       'sql                    @shBrushSql.js',
-      'vb vbnet               @shBrushVb.js',
       'xml xhtml xslt html    @shBrushXml.js'
     ));
     SyntaxHighlighter.all();

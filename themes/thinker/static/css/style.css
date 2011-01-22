@@ -137,16 +137,16 @@ pre,code,kbd,samp,tt {font-family:monospace;*font-size:108%;line-height:100%;}
 /*-------------------------------------------------------------------------------------------*/
 
 /* 1.1 Defaults */
-html { -webkit-font-smoothing: antialiased; }
+html {}
 body{background:#fff;}
 body, select, input, textarea { color:#444; }
-h1,h2,h3,h4,h5,h6 { text-rendering: optimizeLegibility;}
+h1,h2,h3,h4,h5,h6 {}
 h1,h2,h3{font-weight:500;}
 h1{font-size:197%;}
 h2{font-size:167%;}
 h3{font-size:108%;}
 h1,h2,h3{margin:0 0 1em 0;}
-/*h1,h2,h3,h4,h5,h6,strong{font-weight:bold;}*/
+h1,h2,h3,h4,h5,h6,strong{font-weight:bold;}
 strong{font-weight:bold;}
 abbr,acronym{border-bottom:1px dotted #000;cursor:help;}
 em{font-style:italic;}
