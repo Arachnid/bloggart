@@ -31,6 +31,7 @@ sidebars = [
   '<a href="http://www.facebook.com/johndturner">About Me</a>',
   '<a href="/contact-me">Contact Me</a>',
   '<a href="/stuff-i-use">Stuff I Use</a>',
+  '<a href="http://www.seedprod.com">My Company</a>',
   ]),
 ]
 
