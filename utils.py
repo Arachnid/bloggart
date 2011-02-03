@@ -106,7 +106,7 @@ def tzinfo():
   config.tzinfo_class; else, None.
   """
 
-  if not config.tzinfo_class:
+  if not config.__dict__.get('tzinfo_class'):
     return None
 
   str = config.tzinfo_class
