@@ -128,10 +128,11 @@ class PreviewHandler(BaseHandler):
         'post': post,
         'is_admin': True}))
 
+
 class RegenerateHandler(BaseHandler):
   def post(self):
-    regen = post_deploy.PostRegenerator()
-    deferred.defer(regen.regenerate)
+    deferred.defer(post_deploy.PostRegenerator().regenerate)
+    deferred.defer(post_deploy.PageRegenerator().regenerate)
     deferred.defer(post_deploy.try_post_deploy, force=True)
     self.render_to_response("regenerating.html")
 
@@ -139,10 +140,9 @@ class RegenerateHandler(BaseHandler):
 class PageForm(djangoforms.ModelForm):
   path = forms.RegexField(
     widget=forms.TextInput(attrs={'id':'path'}), 
-    regex='(/[a-zA-Z0-9].*)')
+    regex='(/[a-zA-Z0-9/]+)')
   title = forms.CharField(widget=forms.TextInput(attrs={'id':'title'}))
-  template = forms.ChoiceField(
-    choices=[(k, v) for k, v in config.page_templates.iteritems()])
+  template = forms.ChoiceField(choices=config.page_templates.items())
   body = forms.CharField(widget=forms.Textarea(attrs={
       'id':'body',
       'rows': 10,
@@ -158,13 +158,13 @@ class PageForm(djangoforms.ModelForm):
       raise forms.ValidationError("The given path already exists.")
     return data
 
+
 class PageAdminHandler(BaseHandler):
   def get(self):
     offset = int(self.request.get('start', 0))
     count = int(self.request.get('count', 20))
     pages = models.Page.all().order('-updated').fetch(count, offset)
     template_vals = {
-        'is_admin': True,
         'offset': offset,
         'count': count,
         'prev_offset': max(0, offset - count),
@@ -173,6 +173,7 @@ class PageAdminHandler(BaseHandler):
         'pages': pages,
     }
     self.render_to_response("indexpage.html", template_vals)
+
 
 def with_page(fun):
   def decorate(self, page_key=None):
@@ -186,6 +187,7 @@ def with_page(fun):
         return
     fun(self, page)
   return decorate
+
 
 class PageHandler(BaseHandler):
   def render_form(self, form):
@@ -212,30 +214,19 @@ class PageHandler(BaseHandler):
       if page:
         oldpath = page.path
       page = form.save(commit=False)
-      if page.path:
-        page.updated = datetime.datetime.now()
-        if not page.created:
-          page.created = page.updated
-        page.publish()
-        # path edited, remove old stuff
-        if page.path != oldpath:
-          oldpage = models.Page.get_by_key_name(oldpath)
-          oldpage.remove()
-        self.render_to_response("publishedpage.html", {'page': page})
-      else:
-        self.render_form(form)
+      page.updated = datetime.datetime.now()
+      page.publish()
+      # path edited, remove old stuff
+      if page.path != oldpath:
+        oldpage = models.Page.get_by_key_name(oldpath)
+        oldpage.remove()
+      self.render_to_response("publishedpage.html", {'page': page})
     else:
       self.render_form(form)
+
 
 class PageDeleteHandler(BaseHandler):
   @with_page
   def post(self, page):
     page.remove()
     self.render_to_response("deletedpage.html", None)
-
-class PageRegenerateHandler(BaseHandler):
-  def post(self):
-    regen = post_deploy.PageRegenerator()
-    deferred.defer(regen.regenerate)
-    deferred.defer(post_deploy.post_deploy, post_deploy.BLOGGART_VERSION)
-    self.render_to_response("regeneratingpage.html")

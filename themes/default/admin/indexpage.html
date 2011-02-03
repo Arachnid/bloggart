@@ -56,7 +56,7 @@
     <a href="?start={{next_offset}}&count={{count}}">Next -></a>
   {% endif %}
   <h2>Actions</h2>
-  <form method="post" action="{{config.url_prefix}}/admin/regeneratepages">
-    <input type="submit" value="Regenerate all pages" />
+  <form method="post" action="{{config.url_prefix}}/admin/regenerate">
+    <input type="submit" value="Regenerate all content" />
   </form>
 {% endblock %}

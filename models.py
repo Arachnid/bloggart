@@ -153,7 +153,7 @@ class Page(db.Model):
   title = db.TextProperty(required=True)
   template = db.StringProperty(required=True)
   body = db.TextProperty(required=True)
-  created = db.DateTimeProperty()
+  created = db.DateTimeProperty(required=True, auto_now_add=True)
   updated = db.DateTimeProperty()
 
   @property
