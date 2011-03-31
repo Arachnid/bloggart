@@ -1,7 +1,7 @@
 import datetime
 import logging
 import os
-from google.appengine.api.labs import taskqueue
+from google.appengine.api import taskqueue
 from google.appengine.ext import deferred
 
 import config
@@ -89,7 +89,7 @@ def run_deploy_task():
   task_name = 'deploy-%s' % os.environ['CURRENT_VERSION_ID'].replace('.', '-')
   try:
     deferred.defer(try_post_deploy, _name=task_name, _countdown=10)
-  except (taskqueue.TaskAlreadyExistsError, taskqueue.TombstonedTaskError), e:
+  except (taskqueue.TaskAlreadyExistsError, taskqueue.taskqueue.TombstonedTaskError), e:
     pass
 
 
