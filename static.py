@@ -2,7 +2,7 @@ import datetime
 import hashlib
 
 from google.appengine.api import memcache
-from google.appengine.api.labs import taskqueue
+from google.appengine.api import taskqueue
 from google.appengine.ext import db
 from google.appengine.ext import deferred
 from google.appengine.datastore import entity_pb
@@ -88,7 +88,7 @@ def set(path, body, content_type, indexed=True, **kwargs):
           utils._regenerate_sitemap,
           _name='sitemap-%s' % (now.strftime('%Y%m%d%H%M'),),
           _eta=eta)
-  except (taskqueue.TaskAlreadyExistsError, taskqueue.TombstonedTaskError), e:
+  except (taskqueue.taskqueue.TaskAlreadyExistsError, taskqueue.taskqueue.TombstonedTaskError), e:
     pass
   return content
 
