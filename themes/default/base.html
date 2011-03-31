@@ -3,12 +3,22 @@
 <head>
   <title>{% block title %}Bloggart{% endblock %}</title>
   {% block style %}
-  <link rel="stylesheet" type="text/css" media="screen" href="{{config.url_prefix}}/static/default/css/screen.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{config.url_prefix}}/static/{{config.theme}}/css/screen.css" />
   {% endblock %}
   {% if config.highlighting_style %}
-  <link rel="stylesheet" type="text/css" media="screen" href="{{config.url_prefix}}/static/default/css/pygments_{{config.highlighting_style}}.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="{{config.url_prefix}}/static/{{config.theme}}/css/pygments_{{config.highlighting_style}}.css" />
   {% endif %}
-  <link rel="alternate" type="application/atom+xml" href="{{config.url_prefix}}/feeds/atom.xml" />
+  <link rel="alternate" type="application/atom+xml" 
+	href="{% if config.feed_proxy %}{{ config.feed_proxy }}{% else %}{{config.url_prefix}}/feeds/atom.xml{% endif %}" />
+  <link rel="SHORTCUT ICON" href="{{config.url_prefix}}/static/{{config.theme}}/favicon.ico"/>
+  {% if config.rel_me %}
+  <link rel="me" href="{{config.rel_me}}" />
+  {% endif %}
+
+  {% if config.google_friends_id %}
+  <!-- Include the Google Friend Connect javascript library. -->
+  <script type="text/javascript" src="http://www.google.com/friendconnect/script/friendconnect.js"></script>
+  {% endif %}
   <link href="/static/{{config.theme}}/css/prettify.css" type="text/css" rel="stylesheet" />
   <script type="text/javascript" src="/static/{{config.theme}}/prettify.js"></script>
   {% block head %}{% endblock %}
@@ -20,6 +30,7 @@
 		<div  id="nav">
 			<ul>
 				<li{% ifequal generator_class "IndexContentGenerator" %} id="current"{% endifequal %}><a href="{{config.url_prefix}}/">Home</a></li>
+				<li{% ifequal generator_class "ArchiveIndexContentGenerator" %} id="current"{% else %}{% ifequal generator_class "ArchivePageContentGenerator" %} id="current"{% endifequal %}{% endifequal %}><a href="{{config.url_prefix}}/archive/">Archive</a></li>
         {% block menu %}{% endblock %}
 			</ul>
 		</div>		
@@ -31,7 +42,7 @@
         <input type="hidden" name="cof" value="FORID:11" />
         <input type="hidden" name="ie" value="UTF-8" />
         <input class="tbox" type="text" name="q" size="31" />
-        <input class="btn" type="image" name="sa" value="Search" src="{{config.url_prefix}}/static/default/images/search.gif" alt="Search" />
+        <input class="btn" type="image" name="sa" value="Search" src="{{config.url_prefix}}/static/{{config.theme}}/images/search.gif" alt="Search" />
       </p>
     </form>
     <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=quick-search&lang=en"></script>
@@ -46,11 +57,44 @@
           <h3>{{sidebar.0}}</h3>
           <ul>
             {% for entry in sidebar.1 %}
-              <li><a href="{{entry.1}}">{{entry.0}}</a></li>
+              <li>{{entry}}</li>
             {% endfor %}
           </ul>
         </div>
       {% endfor %}
+
+     {% if config.google_friends_id and config.google_friends_members %}
+        <div class="sidemenu">
+          <h3>Members</h3>
+          <!-- Define the div tag where the gadget will be inserted. -->
+          <div id="div-1279810020886984279" style=""></div>
+          <!-- Render the gadget into a div. -->
+          <script type="text/javascript">
+            var skin = {};
+            skin['BORDER_COLOR'] = '#cccccc';
+            skin['ENDCAP_BG_COLOR'] = '#fff';
+            skin['ENDCAP_TEXT_COLOR'] = '#444';
+            skin['ENDCAP_LINK_COLOR'] = '#0000cc';
+            skin['ALTERNATE_BG_COLOR'] = '#ffffff';
+            skin['CONTENT_BG_COLOR'] = '#ffffff';
+            skin['CONTENT_LINK_COLOR'] = '#000';
+            skin['CONTENT_TEXT_COLOR'] = '#666';
+            skin['CONTENT_SECONDARY_LINK_COLOR'] = '#7777cc';
+            skin['CONTENT_SECONDARY_TEXT_COLOR'] = '#666666';
+            skin['CONTENT_HEADLINE_COLOR'] = '#666';
+            skin['NUMBER_ROWS'] = '4';
+            google.friendconnect.container.setParentUrl('/' /* location of rpc_relay.html and canvas.html */);
+            google.friendconnect.container.renderMembersGadget(
+            { id: 'div-1279810020886984279',
+            site: '{{ config.google_friends_id }}'
+            }, skin);
+          </script>
+        </div>
+      {% endif %}
+
+
+
+
 		</div>		
 	</div></div>
 	<div id="footer-wrapper" class="container_16">
@@ -61,13 +105,17 @@
 			</p>	
 			<p class="bottom-right" >
 				<a href="{{config.url_prefix}}/">Home</a> |
-        <a href="{{config.url_prefix}}/feeds/atom.xml">Atom</a> |
+        <a href="{% if config.feed_proxy %}
+	        {{ config.feed_proxy }}
+	      {% else %}
+	        {{config.url_prefix}}/feeds/atom.xml
+	      {% endif %}">Atom</a> |
 				<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a> | 
 		   	<a href="http://validator.w3.org/check/referer">XHTML</a>
 			</p>
 		</div>	
 	</div>
-{% if config.analytics_id %}
+{% if config.analytics_id and not devel and not is_admin %}
   <script type="text/javascript">
   var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
   document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

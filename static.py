@@ -18,17 +18,20 @@ import utils
 
 HTTP_DATE_FMT = "%a, %d %b %Y %H:%M:%S GMT"
 
-ROOT_ONLY_FILES = ['/robots.txt','/' + config.google_site_verification]
+if config.google_site_verification is not None:
+    ROOT_ONLY_FILES = ['/robots.txt','/' + config.google_site_verification]
+else:
+    ROOT_ONLY_FILES = ['/robots.txt']
 
 class StaticContent(db.Model):
   """Container for statically served content.
-  
+
   The serving path for content is provided in the key name.
   """
   body = db.BlobProperty()
   content_type = db.StringProperty()
   status = db.IntegerProperty(required=True, default=200)
-  last_modified = db.DateTimeProperty(required=True, auto_now=True)
+  last_modified = db.DateTimeProperty(required=True)
   etag = aetycoon.DerivedProperty(lambda x: hashlib.sha1(x.body).hexdigest())
   indexed = db.BooleanProperty(required=True, default=True)
   headers = db.StringListProperty()
@@ -36,7 +39,7 @@ class StaticContent(db.Model):
 
 def get(path):
   """Returns the StaticContent object for the provided path.
-  
+
   Args:
     path: The path to retrieve StaticContent for.
   Returns:
@@ -49,13 +52,13 @@ def get(path):
     entity = StaticContent.get_by_key_name(path)
     if entity:
       memcache.set(path, db.model_to_protobuf(entity).Encode())
-  
+
   return entity
 
 
 def set(path, body, content_type, indexed=True, **kwargs):
   """Sets the StaticContent for the provided path.
-  
+
   Args:
     path: The path to store the content against.
     body: The data to serve for that path.
@@ -65,16 +68,20 @@ def set(path, body, content_type, indexed=True, **kwargs):
   Returns:
     A StaticContent object.
   """
+  now = datetime.datetime.now().replace(second=0, microsecond=0)
+  defaults = {
+    "last_modified": now,
+  }
+  defaults.update(kwargs)
   content = StaticContent(
       key_name=path,
       body=body,
       content_type=content_type,
       indexed=indexed,
-      **kwargs)
+      **defaults)
   content.put()
   memcache.replace(path, db.model_to_protobuf(content).Encode())
   try:
-    now = datetime.datetime.now().replace(second=0, microsecond=0)
     eta = now.replace(second=0, microsecond=0) + datetime.timedelta(seconds=65)
     if indexed:
       deferred.defer(
@@ -87,7 +94,7 @@ def set(path, body, content_type, indexed=True, **kwargs):
 
 def add(path, body, content_type, indexed=True, **kwargs):
   """Adds a new StaticContent and returns it.
-  
+
   Args:
     As per set().
   Returns:
@@ -101,16 +108,16 @@ def add(path, body, content_type, indexed=True, **kwargs):
 
 def remove(path):
   """Deletes a StaticContent.
-  
+
   Args:
     path: Path of the static content to be removed.
   """
   memcache.delete(path)
   def _tx():
-    content = StaticContent.get_by_key_name(path) 
+    content = StaticContent.get_by_key_name(path)
     if not content:
       return
-    content.delete() 
+    content.delete()
   return db.run_in_transaction(_tx)
 
 class StaticContentHandler(webapp.RequestHandler):
@@ -128,7 +135,7 @@ class StaticContentHandler(webapp.RequestHandler):
       self.response.out.write(content.body)
     else:
       self.response.set_status(304)
-  
+
   def get(self, path):
     if not path.startswith(config.url_prefix):
       if path not in ROOT_ONLY_FILES:

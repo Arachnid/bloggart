@@ -1,0 +1,62 @@
+{% extends "admin/base.html" %}
+{% block title %}All Posts{% endblock %}
+{% block body %}
+  <script type="text/javascript">
+	function delete_page(id){
+      var decision = confirm("Are you sure you want to delete this page.");
+      if(decision){
+        document.forms['page_delete_form_' + id].submit();
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+  </script>
+  <h2>Pages</h2>
+  	<p>
+	  <a href="{{config.url_prefix}}/admin/newpage">Create new page...</a>
+	</p>
+
+   {% ifnotequal last_page -1 %}
+    <p>Pages {{offset|add:1}} to {{last_page|add:1}}</p>
+    <table>
+      <thead>
+	<tr><th>Path</th><th>Title</th><th>Created</th><th>Updated</th><th>Actions</th></tr>
+      </thead>
+      {% for page in pages %}
+        <tr>
+		  <td><a href="{{config.url_prefix}}{{page.path}}">{{page.path}}</a></td>
+          <td>{{page.title}}</td>
+          <td>{{page.created|date:"Y-m-d"}}</td>
+		  <td>{{page.updated|date:"Y-m-d"}}</td>
+	  <td>
+	    <a href="{{config.url_prefix}}{{page.path|escape}}">View</a>
+	      |
+	    <a href="{{config.url_prefix}}/admin/page/{{page.path|escape}}">Edit</a>
+        |
+      <form id="page_delete_form_{{page.path|escape}}" 
+        action="{{config.url_prefix}}/admin/page/delete/{{page.path|escape}}" method="post" 
+        style="display:inline;margin:0;padding:0;background:none;border:none;">
+        <a href="#" onclick="javascript:delete_page('{{page.path|escape}}');">Delete</a>
+      </form>
+	  </td>
+	</tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>
+      No pages yet.
+    </p>
+  {% endifnotequal %}
+  {% ifnotequal offset 0 %}
+    <a href="?start={{prev_offset}}&count={{count}}">&lt;- Previous</a>
+  {% endifnotequal %}
+  {% if pages|length_is:count %}
+    <a href="?start={{next_offset}}&count={{count}}">Next -></a>
+  {% endif %}
+  <h2>Actions</h2>
+  <form method="post" action="{{config.url_prefix}}/admin/regenerate">
+    <input type="submit" value="Regenerate all content" />
+  </form>
+{% endblock %}

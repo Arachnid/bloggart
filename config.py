@@ -14,6 +14,12 @@ host = 'blog.notdot.net'
 # the 'themes' directory, containing templates and static content.
 theme = 'default'
 
+# List of page templates
+page_templates = {
+	'Theme.html': 'Theme',
+	'Simple.html': 'Simple',
+}
+
 # Defines the URL organization to use for blog postings. Valid substitutions:
 #   slug - the identifier for the post, derived from the title
 #   year - the year the post was published in
@@ -25,12 +31,12 @@ post_path_format = '/%(year)d/%(month)02d/%(slug)s'
 # enough, you can edit themes/default/base.html instead.
 sidebars = [
   ('Blogroll', [
-    ('Nick Johnson', 'http://blog.notdot.net/'),
-    ('Bill Katz', 'http://www.billkatz.com/'),
-    ('Coding Horror', 'http://www.codinghorror.com/blog/'),
-    ('Craphound', 'http://craphound.com/'),
-    ('Neopythonic', 'http://www.neopythonic.blogspot.com/'),
-    ('Schneier on Security', 'http://www.schneier.com/blog/'),
+    '<a href="http://blog.notdot.net/">Nick Johnsonz</a>',
+    '<a href="http://www.billkatz.com/">Bill Katz</a>',
+    '<a href="http://www.codinghorror.com/blog/">Coding Horror</a>',
+    '<a href="http://craphound.com/">Craphound</a>',
+    '<a href="http://www.neopythonic.blogspot.com/">Neopythonic</a>',
+    '<a href="http://www.schneier.com/blog/">Schneier on Security</a>',
   ]),
 ]
 
@@ -53,7 +59,11 @@ analytics_id = 'UA-84449-3'
 # If you want to use PubSubHubbub, supply the hub URL to use here.
 hubbub_hub_url = 'http://pubsubhubbub.appspot.com/'
 
-# If you want to use Google Site verification, go to 
+# If you want to ping Google Sitemap when your sitemap is generated change this to True, else False
+# see: http://www.google.com/support/webmasters/bin/answer.py?hl=en&answer=34609 for more information
+google_sitemap_ping = True
+
+# If you want to use Google Site verification, go to
 # https://www.google.com/webmasters/tools/ , add your site, choose the 'upload
 # an html file' method, then set the NAME of the file below.
 # Note that you do not need to download the file provided - just enter its name
@@ -69,6 +79,24 @@ default_markup = 'html'
 # 'friendly', 'native'.
 highlighting_style = 'friendly'
 
-# Absolute url of the blog application use '/blog' for host/blog/ 
-# and '' for host/.Also remember to change app.yaml accordingly 
+# Absolute url of the blog application use '/blog' for host/blog/
+# and '' for host/.Also remember to change app.yaml accordingly
 url_prefix = ''
+
+# Defines where the user is defined in the rel="me" of your pages.
+# This allows you to expand on your social graph.
+rel_me = None
+
+# For use a feed proxy like feedburne.google.com
+feed_proxy = None
+
+# To use Google Friends Connect.                                          
+# If you want use Google Friends Connect, go to http://www.google.com/friendconnect/ 
+# and register your domain for get a Google Friends connect ID.
+google_friends_id = None
+google_friends_comments = True # For comments.
+google_friends_members  = True # For a members container.
+
+# To format the date of your post.
+# http://docs.djangoproject.com/en/1.1/ref/templates/builtins/#now
+date_format = "d F, Y"

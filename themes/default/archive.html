@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Archives - {{config.blog_name}}{% endblock %}
+{% block body %}
+<ul>
+	{% for months in date_struct %}
+	<li>
+		{% for date in months %}
+		{% if forloop.first %}{{date|date:"Y"}}<ul>{% endif %}
+		<li><a href="{{config.url_prefix}}/archive/{{date|date:"Y/m"}}/">{{date|date:"F"}}</a></li>
+		{% endfor  %}
+	</ul></li>
+	{% endfor %}
+</ul>
+{% endblock %}

@@ -11,14 +11,15 @@ from django.template import loader
 
 import config
 
+BASE_DIR = os.path.dirname(__file__)
 
 if isinstance(config.theme, (list, tuple)):
   TEMPLATE_DIRS = config.theme
 else:
-  TEMPLATE_DIRS = [os.path.abspath('themes/default')]
+  TEMPLATE_DIRS = [os.path.abspath(os.path.join(BASE_DIR, 'themes/default'))]
   if config.theme and config.theme != 'default':
     TEMPLATE_DIRS.insert(0,
-                         os.path.abspath(os.path.join('themes', config.theme)))
+                         os.path.abspath(os.path.join(BASE_DIR, 'themes', config.theme)))
 
 
 def slugify(s):
@@ -30,11 +31,12 @@ def format_post_path(post, num):
   slug = slugify(post.title)
   if num > 0:
     slug += "-" + str(num)
+  date = post.published_tz
   return config.post_path_format % {
       'slug': slug,
-      'year': post.published.year,
-      'month': post.published.month,
-      'day': post.published.day,
+      'year': date.year,
+      'month': date.month,
+      'day': date.day,
   }
 
 
@@ -77,6 +79,62 @@ def _get_all_paths():
 
 def _regenerate_sitemap():
   import static
+  import gzip
+  from StringIO import StringIO
   paths = _get_all_paths()
   rendered = render_template('sitemap.xml', {'paths': paths})
   static.set('/sitemap.xml', rendered, 'application/xml', False)
+  s = StringIO()
+  gzip.GzipFile(fileobj=s,mode='wb').write(rendered)
+  s.seek(0)
+  renderedgz = s.read()
+  static.set('/sitemap.xml.gz',renderedgz, 'application/x-gzip', False)
+  if config.google_sitemap_ping:
+      ping_googlesitemap()
+
+def ping_googlesitemap():
+  import urllib
+  from google.appengine.api import urlfetch
+  google_url = 'http://www.google.com/webmasters/tools/ping?sitemap=http://' + config.host + '/sitemap.xml.gz'
+  response = urlfetch.fetch(google_url, '', urlfetch.GET)
+  if response.status_code / 100 != 2:
+    raise Warning("Google Sitemap ping failed", response.status_code, response.content)
+
+def tzinfo():
+  """
+  Returns an instance of a tzinfo implementation, as specified in
+  config.tzinfo_class; else, None.
+  """
+
+  if not config.__dict__.get('tzinfo_class'):
+    return None
+
+  str = config.tzinfo_class
+  i = str.rfind(".")
+
+  try:
+    # from str[:i] import str[i+1:]
+    klass_str = str[i+1:]
+    mod = __import__(str[:i], globals(), locals(), [klass_str])
+    klass = getattr(mod, klass_str)
+    return klass()
+  except ImportError:
+    return None
+
+def tz_field(property):
+  """
+  For a DateTime property, make it timezone-aware if possible.
+
+  If it already is timezone-aware, don't do anything.
+  """
+  if property.tzinfo:
+    return property
+
+  tz = tzinfo()
+  if tz:
+    # delay importing, hopefully after fix_path is done
+    from timezones.utc import UTC
+
+    return property.replace(tzinfo=UTC()).astimezone(tz)
+  else:
+    return property

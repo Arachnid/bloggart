@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+"""
+Regenerate all pages using deferred.
+
+Usage: regen [-l | -v version]
+
+By default, requests are made to {APPID}.appspot.com.
+
+Options:
+    -l    make requests to localhost:8080
+		-v    make requests to $version.latest.{APPID}.appspot.com
+"""
+import sys
+
+import remote
+
+if len(sys.argv) == 2 and sys.argv[1] == '-l':
+	host = 'localhost:8080'
+elif len(sys.argv) == 3 and sys.argv[1] == '-v':
+	host = sys.argv[2] + '.latest.' + remote.APPID + '.appspot.com'
+else:
+	host = None
+
+remote.attach(host)
+
+from google.appengine.ext import deferred
+
+import static
+import post_deploy
+
+
+deferred.defer(post_deploy.PostRegenerator().regenerate)
+deferred.defer(post_deploy.post_deploy, post_deploy.BLOGGART_VERSION)
