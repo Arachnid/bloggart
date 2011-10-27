@@ -9,7 +9,7 @@ Default cascading style sheet for the PEP HTML output of Docutils.
 */
 
 /* "! important" is used here to override other ``margin-top`` and
-   ``margin-bottom`` styles that are later in the stylesheet or 
+   ``margin-bottom`` styles that are later in the stylesheet or
    more specific.  See http://www.w3.org/TR/CSS1#the-cascade */
 .first {
   margin-top: 0 ! important }
