@@ -8,7 +8,7 @@
   {% if config.highlighting_style %}
   <link rel="stylesheet" type="text/css" media="screen" href="{{config.url_prefix}}/static/{{config.theme}}/css/pygments_{{config.highlighting_style}}.css" />
   {% endif %}
-  <link rel="alternate" type="application/atom+xml" 
+  <link rel="alternate" type="application/atom+xml"
 	href="{% if config.feed_proxy %}{{ config.feed_proxy }}{% else %}{{config.url_prefix}}/feeds/atom.xml{% endif %}" />
   <link rel="SHORTCUT ICON" href="{{config.url_prefix}}/static/{{config.theme}}/favicon.ico"/>
   {% if config.rel_me %}
@@ -23,8 +23,8 @@
   {% block head %}{% endblock %}
 </head>
 <body>
-	<div id="header-wrap"><div id="header" class="container_16">						
-		<h1 id="logo-text"><a href="{{config.url_prefix}}/" title="">{{config.blog_name}}</a></h1>		
+	<div id="header-wrap"><div id="header" class="container_16">
+		<h1 id="logo-text"><a href="{{config.url_prefix}}/" title="">{{config.blog_name}}</a></h1>
 		<p id="intro">{{config.slogan}}</p>
 		<div  id="nav">
 			<ul>
@@ -32,8 +32,8 @@
 				<li{% ifequal generator_class "ArchiveIndexContentGenerator" %} id="current"{% else %}{% ifequal generator_class "ArchivePageContentGenerator" %} id="current"{% endifequal %}{% endifequal %}><a href="{{config.url_prefix}}/archive/">Archive</a></li>
         {% block menu %}{% endblock %}
 			</ul>
-		</div>		
-		<div id="header-image"></div> 
+		</div>
+		<div id="header-image"></div>
     <form id="quick-search" action="{{config.url_prefix}}/search" method="get">
       <p>
         <label for="q">Search:</label>
@@ -94,14 +94,14 @@
 
 
 
-		</div>		
+		</div>
 	</div></div>
 	<div id="footer-wrapper" class="container_16">
 		<div id="footer-bottom">
-			<p class="bottom-left">			
+			<p class="bottom-left">
 			&nbsp; &copy; {{config.author_name}} &nbsp; &nbsp;
-			Design by : <a href="http://www.styleshout.com/">styleshout</a>												
-			</p>	
+			Design by : <a href="http://www.styleshout.com/">styleshout</a>
+			</p>
 			<p class="bottom-right" >
 				<a href="{{config.url_prefix}}/">Home</a> |
         <a href="{% if config.feed_proxy %}
@@ -109,10 +109,10 @@
 	      {% else %}
 	        {{config.url_prefix}}/feeds/atom.xml
 	      {% endif %}">Atom</a> |
-				<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a> | 
+				<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a> |
 		   	<a href="http://validator.w3.org/check/referer">XHTML</a>
 			</p>
-		</div>	
+		</div>
 	</div>
 {% if config.analytics_id and not devel and not is_admin %}
   <script type="text/javascript">

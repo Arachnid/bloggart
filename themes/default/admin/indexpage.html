@@ -35,8 +35,8 @@
 	      |
 	    <a href="{{config.url_prefix}}/admin/page/{{page.path|escape}}">Edit</a>
         |
-      <form id="page_delete_form_{{page.path|escape}}" 
-        action="{{config.url_prefix}}/admin/page/delete/{{page.path|escape}}" method="post" 
+      <form id="page_delete_form_{{page.path|escape}}"
+        action="{{config.url_prefix}}/admin/page/delete/{{page.path|escape}}" method="post"
         style="display:inline;margin:0;padding:0;background:none;border:none;">
         <a href="#" onclick="javascript:delete_page('{{page.path|escape}}');">Delete</a>
       </form>
