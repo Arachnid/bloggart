@@ -6,7 +6,6 @@ from google.appengine.api import urlfetch
 from google.appengine.ext import db
 from google.appengine.ext import deferred
 
-import fix_path
 import config
 import markup
 import static

@@ -6,6 +6,7 @@
     <table>
       {{form}}
     </table>
+    <input type="hidden" name="xsrf" value="{{ ''|xsrf_token }}">
     <input type="submit" value="Submit page" />
   </form>
 {% endblock %}

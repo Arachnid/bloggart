@@ -1,7 +1,6 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import fix_path
 import config
 import post_deploy
 import handlers
@@ -26,7 +25,6 @@ application = webapp.WSGIApplication([
 
 
 def main():
-  fix_path.fix_sys_path()
   run_wsgi_app(application)
 
 

@@ -10,6 +10,7 @@ from django import template
 from django.template import loader
 
 import config
+import xsrfutil
 
 BASE_DIR = os.path.dirname(__file__)
 
@@ -51,6 +52,9 @@ def get_template_vals_defaults(template_vals=None):
 
 
 def render_template(template_name, template_vals=None, theme=None):
+  register = webapp.template.create_template_register()
+  register.filter('xsrf_token', xsrfutil.xsrf_token)
+  template.builtins.append(register)
   template_vals = get_template_vals_defaults(template_vals)
   template_vals.update({'template_name': template_name})
   old_settings = _swap_settings({'TEMPLATE_DIRS': TEMPLATE_DIRS})
@@ -132,7 +136,6 @@ def tz_field(property):
 
   tz = tzinfo()
   if tz:
-    # delay importing, hopefully after fix_path is done
     from timezones.utc import UTC
 
     return property.replace(tzinfo=UTC()).astimezone(tz)
