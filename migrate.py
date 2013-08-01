@@ -11,7 +11,6 @@ from google.appengine.ext import db
 from google.appengine.ext import deferred
 
 import config
-import fix_path
 import models
 import post_deploy
 
