@@ -35,11 +35,13 @@
 	      |
 	    <a href="{{config.url_prefix}}/admin/page/{{page.path|escape}}">Edit</a>
         |
-      <form id="page_delete_form_{{page.path|escape}}" 
-        action="{{config.url_prefix}}/admin/page/delete/{{page.path|escape}}" method="post" 
-        style="display:inline;margin:0;padding:0;background:none;border:none;">
-        <a href="#" onclick="javascript:delete_page('{{page.path|escape}}');">Delete</a>
-      </form>
+      {% with config.url_prefix|add:"/admin/page/delete/"|add:page.path|escape as action %}
+        <form id="page_delete_form_{{page.path|escape}}" action="{{action}}" method="post"
+          style="display:inline;margin:0;padding:0;background:none;border:none;">
+          <input type="hidden" name="xsrf" value="{{ action|xsrf_token}}">
+          <a href="#" onclick="javascript:delete_page('{{page.path|escape}}');">Delete</a>
+        </form>
+      {% endwith %}
 	  </td>
 	</tr>
       {% endfor %}
@@ -56,7 +58,10 @@
     <a href="?start={{next_offset}}&count={{count}}">Next -></a>
   {% endif %}
   <h2>Actions</h2>
-  <form method="post" action="{{config.url_prefix}}/admin/regenerate">
-    <input type="submit" value="Regenerate all content" />
-  </form>
+  {% with config.url_prefix|add:"/admin/regenerate" as action %}
+    <form method="post" action="{{action}}">
+      <input type="hidden" name="xsrf" value="{{ action|xsrf_token }}">
+      <input type="submit" value="Regenerate all content" />
+    </form>
+  {% endwith %}
 {% endblock %}

@@ -36,11 +36,13 @@
 	      |
 	    <a href="{{config.url_prefix}}/admin/post/{{post.key.id}}">Edit</a>
         |
-      <form id="delete_form_{{post.key.id}}" 
-        action="{{config.url_prefix}}/admin/post/delete/{{post.key.id}}" method="post" 
-        style="display:inline;margin:0;padding:0;background:none;border:none;">
-        <a href="#" onclick="javascript:delete_post('{{post.key.id}}');">Delete</a>
-      </form>
+      {% with config.url_prefix|add:"/admin/post/delete/"|add:post.key.id as action %}
+        <form id="delete_form_{{post.key.id}}" action="{{action}}" method="post" 
+          style="display:inline;margin:0;padding:0;background:none;border:none;">
+          <input type="hidden" name="xsrf" value="{{ action|xsrf_token }}">
+          <a href="#" onclick="javascript:delete_post('{{post.key.id}}');">Delete</a>
+        </form>
+      {% endwith %}
 	  </td>
 	</tr>
       {% endfor %}
@@ -58,7 +60,10 @@
     <a href="?start={{next_offset}}&count={{count}}">Next -></a>
   {% endif %}
   <h2>Actions</h2>
-  <form method="post" action="{{config.url_prefix}}/admin/regenerate">
-    <input type="submit" value="Regenerate all content" />
-  </form>
+  {% with config.url_prefix|add:"/admin/regenerate" as action %}
+    <form method="post" action="{{action}}">
+      <input type="hidden" name="xsrf" value="{{ action|xsrf_token }}">
+      <input type="submit" value="Regenerate all content" />
+    </form>
+  {% endwith %}
 {% endblock %}

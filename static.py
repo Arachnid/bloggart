@@ -10,7 +10,6 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import fix_path
 import aetycoon
 import config
 import utils
@@ -75,7 +74,7 @@ def set(path, body, content_type, indexed=True, **kwargs):
   defaults.update(kwargs)
   content = StaticContent(
       key_name=path,
-      body=body,
+      body=str(body),
       content_type=content_type,
       indexed=indexed,
       **defaults)
@@ -180,7 +179,6 @@ application = webapp.WSGIApplication([
 
 
 def main():
-  fix_path.fix_sys_path()
   run_wsgi_app(application)
 
 

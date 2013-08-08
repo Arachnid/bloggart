@@ -10,8 +10,9 @@ import markup
 import models
 import post_deploy
 import utils
+import xsrfutil
 
-from django import newforms as forms
+from django import forms
 from google.appengine.ext.db import djangoforms
 
 
@@ -85,13 +86,14 @@ class PostHandler(BaseHandler):
           'body_markup': post and post.body_markup or config.default_markup,
         }))
 
+  @xsrfutil.xsrf_protect
   @with_post
   def post(self, post):
     form = PostForm(data=self.request.POST, instance=post,
                     initial={'draft': post and post.published is None})
     if form.is_valid():
       post = form.save(commit=False)
-      if form.clean_data['draft']:# Draft post
+      if form.cleaned_data['draft']:# Draft post
         post.published = datetime.datetime.max
         post.put()
       else:
@@ -102,11 +104,12 @@ class PostHandler(BaseHandler):
         post.publish()
       self.render_to_response("published.html", {
           'post': post,
-          'draft': form.clean_data['draft']})
+          'draft': form.cleaned_data['draft']})
     else:
       self.render_form(form)
 
 class DeleteHandler(BaseHandler):
+  @xsrfutil.xsrf_protect
   @with_post
   def post(self, post):
     if post.path:# Published post
@@ -130,6 +133,7 @@ class PreviewHandler(BaseHandler):
 
 
 class RegenerateHandler(BaseHandler):
+  @xsrfutil.xsrf_protect
   def post(self):
     deferred.defer(post_deploy.PostRegenerator().regenerate)
     deferred.defer(post_deploy.PageRegenerator().regenerate)
@@ -201,6 +205,7 @@ class PageHandler(BaseHandler):
           'path': page and page.path or '/',
         }))
 
+  @xsrfutil.xsrf_protect
   @with_page
   def post(self, page):
     form = None
@@ -226,6 +231,7 @@ class PageHandler(BaseHandler):
 
 
 class PageDeleteHandler(BaseHandler):
+  @xsrfutil.xsrf_protect
   @with_page
   def post(self, page):
     page.remove()

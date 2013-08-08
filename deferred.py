@@ -27,10 +27,7 @@ See deferred.py for full documentation.
 from google.appengine.ext import deferred
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-import fix_path
-
 def main():
-  fix_path.fix_sys_path()
   run_wsgi_app(deferred.application)
 
 
