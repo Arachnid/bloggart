@@ -31,6 +31,11 @@
       </script>
     {% endif %}
     <script type="text/javascript" src="http://disqus.com/forums/{{config.disqus_forum}}/embed.js"></script>
+    <script type="text/javascript">
+      disqus_identifier = 'post_{{post.key}}';
+      disqus_url = '{{config.url_prefix}}{{post.path}}';
+      disqus_title = '{{post.title}}';
+    </script>
     <noscript><a href="http://disqus.com/forums/{{config.disqus_forum}}/?url=ref">View the discussion thread.</a></noscript>
     <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
   {% endif %}
