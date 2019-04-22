@@ -20,10 +20,11 @@
   <!-- Include the Google Friend Connect javascript library. -->
   <script type="text/javascript" src="http://www.google.com/friendconnect/script/friendconnect.js"></script>
   {% endif %}
-
+  <link href="/static/{{config.theme}}/css/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="/static/{{config.theme}}/prettify.js"></script>
   {% block head %}{% endblock %}
 </head>
-<body>
+<body onload="prettyPrint()">
 	<div id="header-wrap"><div id="header" class="container_16">						
 		<h1 id="logo-text"><a href="{{config.url_prefix}}/" title="">{{config.blog_name}}</a></h1>		
 		<p id="intro">{{config.slogan}}</p>
@@ -91,11 +92,15 @@
           </script>
         </div>
       {% endif %}
-
-
-
-
-		</div>		
+      <script type="text/javascript">
+        var uvOptions = {};
+        (function() {
+          var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+          uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/oc2i3tbidwhzAoXqVmkCQ.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+        })();
+      </script>
+</div>
 	</div></div>
 	<div id="footer-wrapper" class="container_16">
 		<div id="footer-bottom">
